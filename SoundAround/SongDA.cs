@@ -7,7 +7,7 @@ namespace SoundAround
 {
     internal class SongDA
     {
-        public static List<Song> GegevensOphalen()
+        public static List<Song> Ophalen()
         {
             //het uitlezen van de database
             //we maken een lijst aan voor de landen in te plaatsen
@@ -66,8 +66,8 @@ namespace SoundAround
         {
             try
             {
-                string sql = "UPDATE Song SET Naam=@Naam WHERE Song_ID=@SongID";
-                SqlParameter ParSongID = new SqlParameter("@SongID", song.Song_ID);
+                string sql = "UPDATE Song SET Betandtype_ID=@Bestandtype_ID, Artiest_ID=@Artiest_ID, Genre_ID=@Genre_ID, Album_ID=@Album_ID, Bestand=@Bestand, Naam=@Naam, Duur=@Duur WHERE Song_ID=@Song_ID";
+                SqlParameter ParSongID = new SqlParameter("@Song_ID", song.Song_ID);
                 SqlParameter ParBestandtype_ID = new SqlParameter("@Bestandtype_ID", song.Bestandtype_ID);
                 SqlParameter ParArtiest_ID = new SqlParameter("@Artiest_ID", song.Artiest_ID);
                 SqlParameter ParGenre_ID = new SqlParameter("@Genre_ID", song.Genre_ID);
