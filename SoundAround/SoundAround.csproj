@@ -55,6 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Artiest.cs" />
+    <Compile Include="ArtiestDA.cs" />
     <Compile Include="Bestandtype.cs" />
     <Compile Include="BestandtypeDA.cs" />
     <Compile Include="Genre.cs" />
