@@ -11,7 +11,7 @@ namespace SoundAround
         {
             //het uitlezen van de database
             //we maken een lijst aan voor de landen in te plaatsen
-            List<Song> Songs = new List<Song>();
+            List<Song> Song = new List<Song>();
             //We maken het statement aan om de landen uit te lezen
             string sSql = "Select * FROM dbo.Song";
             //hier gaan we de verschillende dingen ophalen uit de database
@@ -32,9 +32,9 @@ namespace SoundAround
                 song.Naam = SongDR["Naam"].ToString();
                 //song.Duur = SongDR["Duur"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen
-                Songs.Add(song);
+                Song.Add(song);
             }
-            return Songs;
+            return Song;
         }
 
         public static bool Toevoegen(Song song)
@@ -52,9 +52,8 @@ namespace SoundAround
                 SqlParameter ParNaam = new SqlParameter("@Naam", song.Naam);
                 SqlParameter ParDuur = new SqlParameter("@Duur", song.Duur);
                 //hier sturen de opdracht naar de database
-                Database.ExcecuteSQL(sql, ParBestandtype_ID);
+                Database.ExcecuteSQL(sql, ParBestandtype_ID, ParArtiest_ID, ParGenre_ID, ParAlbum_ID, ParBestand, ParNaam, ParDuur);
                 return true;
-
             }
             catch
             {
@@ -75,7 +74,7 @@ namespace SoundAround
                 SqlParameter ParBestand = new SqlParameter("@Bestand", song.Bestand);
                 SqlParameter ParNaam = new SqlParameter("@Naam", song.Naam);
                 SqlParameter ParDuur = new SqlParameter("@Duur", song.Duur);
-                Database.ExcecuteSQL(sql, ParSongID);
+                Database.ExcecuteSQL(sql, ParSongID, ParBestandtype_ID, ParArtiest_ID, ParGenre_ID, ParAlbum_ID, ParBestand, ParNaam, ParDuur);
                 return true;
             }
             catch
@@ -84,13 +83,13 @@ namespace SoundAround
             }
         }
 
-        public static bool Delete(int SongID)
+        public static bool Delete(int Song_ID)
         {
             try
             {
-                string sql = "DELETE FROM Song WHERE Song_ID=@SongID";
-                SqlParameter ParSongID = new SqlParameter("@SongID", SongID);
-                Database.ExcecuteSQL(sql, ParSongID);
+                string sql = "DELETE FROM Song WHERE Song_ID=@Song_ID";
+                SqlParameter ParSong_ID = new SqlParameter("@Song_ID", Song_ID);
+                Database.ExcecuteSQL(sql, ParSong_ID);
                 return true;
             }
             catch

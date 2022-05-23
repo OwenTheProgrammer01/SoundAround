@@ -55,6 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Bestandtype.cs" />
+    <Compile Include="BestandtypeDA.cs" />
+    <Compile Include="Genre.cs" />
+    <Compile Include="GenreDA.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="SongDA.cs" />
     <Page Include="MainWindow.xaml">
