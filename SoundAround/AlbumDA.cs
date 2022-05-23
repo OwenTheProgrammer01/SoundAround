@@ -49,14 +49,14 @@ namespace SoundAround
             }
         }
 
-        public static bool Wijzigen(Artiest Artiest)
+        public static bool Wijzigen(Album Album)
         {
             try
             {
-                string sql = "UPDATE Artiest SET Artiest=@Artiest WHERE Artiest_ID=@Artiest_ID";
-                SqlParameter ParArtiest_ID = new SqlParameter("@Artiest_ID", Artiest.Artiest_ID);
-                SqlParameter ParArtiest = new SqlParameter("@Artiest", Artiest.artiest);
-                Database.ExcecuteSQL(sql, ParArtiest_ID, ParArtiest);
+                string sql = "UPDATE Album SET Album=@Album WHERE Album_ID=@Album_ID";
+                SqlParameter ParAlbum_ID = new SqlParameter("@Album_ID", Album.Album_ID);
+                SqlParameter ParAlbum = new SqlParameter("@Album", Album.album);
+                Database.ExcecuteSQL(sql, ParAlbum_ID, ParAlbum);
                 return true;
             }
             catch
@@ -65,13 +65,13 @@ namespace SoundAround
             }
         }
 
-        public static bool Delete(int Artiest_ID)
+        public static bool Delete(int Album_ID)
         {
             try
             {
-                string sql = "DELETE FROM Artiest WHERE Aritest_ID=@Artiest_ID";
-                SqlParameter ParArtiest_ID = new SqlParameter("@Artiest_ID", Artiest_ID);
-                Database.ExcecuteSQL(sql, ParArtiest_ID);
+                string sql = "DELETE FROM Album WHERE Album_ID=@Album_ID";
+                SqlParameter ParAlbum_ID = new SqlParameter("@Album_ID", Album_ID);
+                Database.ExcecuteSQL(sql, ParAlbum_ID);
                 return true;
             }
             catch
