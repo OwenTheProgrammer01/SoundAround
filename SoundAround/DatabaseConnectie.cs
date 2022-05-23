@@ -7,18 +7,15 @@ namespace SoundAround
 {
     class Database
     {
+
         // -- DE FORM VOOR HET DE DATABASE AAN TE SPREKEN
         // -- VERSIE 1.0 --
         // -- DATUM 03/01/2020 --
         // -- Gregory Langedock --
         // -- Guldensporencollege campus Engineering --
-
         // -- Enumerations --
-
         // -- Fields --
-
         // -- Properties --
-
 
         private static String ConnectionString
         {
@@ -31,7 +28,6 @@ namespace SoundAround
         }
 
         // -- Constructors --
-
         private Database()
         {
         }
@@ -46,6 +42,7 @@ namespace SoundAround
             oCon.Open();
             return oCon;
         }
+
         //de connectie sluiten en vrijgeven
         private static void ReleaseConnection(SqlConnection oCon)
         {
@@ -55,6 +52,7 @@ namespace SoundAround
                 oCon.Dispose();
             }
         }
+
         //Command maken op basis van bestaande connection, SQL en parameters.
         private static SqlCommand BuildCommand(SqlConnection oCon, string sSql, params SqlParameter[] dbParams)
         {
@@ -67,12 +65,14 @@ namespace SoundAround
             }
             return oCommand;
         }
+
         // een opdracht maken op basis van de SQL en de parameters
         private static SqlCommand BuildCommand(String sSql, params SqlParameter[] dbParams)
         {
             SqlConnection oCon = GetConnection();
             return BuildCommand(oCon, sSql, dbParams);
         }
+
         //een data tabel ophalen uit de database
         public static DataTable GetDT(String sSql, params SqlParameter[] dbParams)
         {
@@ -98,6 +98,7 @@ namespace SoundAround
                 }
             }
         }
+
         // een data lezer ophalen
         public static SqlDataReader GetDR(string sSql, params SqlParameter[] dbParams)
         {
@@ -121,6 +122,7 @@ namespace SoundAround
                 }
             }
         }
+
         // een resultaat uit de database ophalen
         public static Object executeScalar(string sSql, params SqlParameter[] dbParams)
         {
@@ -143,6 +145,7 @@ namespace SoundAround
                 }
             }
         }
+
         //het uitvoeren van update, delete en insert via onderstaande gegevens.
         public static void ExcecuteSQL(String sSQL, params SqlParameter[] dbParams)
         {
