@@ -5,42 +5,42 @@ using System.Data.SqlClient;
 
 namespace SoundAround
 {
-    internal class ArtiestDA
+    internal class AlbumDA
     {
-        public static List<Artiest> Ophalen()
+        public static List<Album> Ophalen()
         {
             //het uitlezen van de database
             //we maken een lijst aan voor de landen in te plaatsen
-            List<Artiest> Artiest = new List<Artiest>();
+            List<Album> Album = new List<Album>();
             //We maken het statement aan om de landen uit te lezen
-            string sSql = "Select * FROM dbo.Artiest";
+            string sSql = "Select * FROM dbo.Album";
             //hier gaan we de verschillende dingen ophalen uit de database
             //we plaatsen dit in een datatabel
-            DataTable ArtiestDT = Database.GetDT(sSql);
+            DataTable AlbumDT = Database.GetDT(sSql);
             //Hier lezen we de datatabel uit met een foreacht
-            foreach (DataRow ArtiestDR in ArtiestDT.Rows)
+            foreach (DataRow AlbumDR in AlbumDT.Rows)
             {
-                Artiest artiest = new Artiest();
+                Album artiest = new Album();
                 //oEvaluatie.iAccountID = Int32.Parse(EvaluatieDR["Account_ID"].ToString());
                 //hier vullen we de gegevens in in de aangemaakte klasse
-                artiest.Artiest_ID = int.Parse(ArtiestDR["Artiest_ID"].ToString());
-                artiest.artiest = ArtiestDR["Artiest"].ToString();
+                artiest.Album_ID = int.Parse(AlbumDR["Album_ID"].ToString());
+                artiest.album = AlbumDR["Album"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen
-                Artiest.Add(artiest);
+                Album.Add(artiest);
             }
-            return Artiest;
+            return Album;
         }
 
-        public static bool Toevoegen(Artiest Artiest)
+        public static bool Toevoegen(Album Album)
         {
             try
             {
                 //hier geven we de sql string op
-                string sql = "INSERT INTO Artiest (Artiest) VALUES (@Artiest)";
+                string sql = "INSERT INTO Album (Album) VALUES (@Album)";
                 //hier maken we de parameters aan om de dingen te kunnen aanvullen
-                SqlParameter ParArtiest = new SqlParameter("@Artiest", Artiest.artiest);
+                SqlParameter ParAblum = new SqlParameter("@Album", Album.album);
                 //hier sturen de opdracht naar de database
-                Database.ExcecuteSQL(sql, ParArtiest);
+                Database.ExcecuteSQL(sql, ParAblum);
                 return true;
             }
             catch
