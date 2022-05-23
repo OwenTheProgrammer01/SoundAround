@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 //dit toevoegen aan de usings voor de database klasse
 using System.Data;
 using System.Data.SqlClient;
-using System.Configuration;
 
-namespace PersoneelsbestandDatabase
+namespace SoundAround
 {
     class Database
     {
@@ -64,7 +59,7 @@ namespace PersoneelsbestandDatabase
         private static SqlCommand BuildCommand(SqlConnection oCon, string sSql, params SqlParameter[] dbParams)
         {
             SqlCommand oCommand = oCon.CreateCommand();
-            oCommand.CommandType = System.Data.CommandType.Text;
+            oCommand.CommandType = CommandType.Text;
             oCommand.CommandText = sSql;
             foreach (SqlParameter oPar in dbParams)
             {
@@ -91,7 +86,7 @@ namespace PersoneelsbestandDatabase
                 oDA.Fill(oDT);
                 return oDT;
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
@@ -136,7 +131,7 @@ namespace PersoneelsbestandDatabase
                 Object oObject = oCommand.ExecuteScalar();
                 return oObject;
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
@@ -157,7 +152,7 @@ namespace PersoneelsbestandDatabase
                 oCommand = BuildCommand(sSQL, dbParams);
                 oCommand.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
