@@ -42,11 +42,17 @@ namespace SoundAround
             try
             {
                 //hier geven we de sql string op
-                string sql = "INSERT INTO Song (Bestandtype_ID, Artiest_ID, Genre_ID, Album_ID, Bestand, Naam, Duur) VALUES (@song)";
+                string sql = "INSERT INTO Song (Bestandtype_ID, Artiest_ID, Genre_ID, Album_ID, Bestand, Naam, Duur) VALUES (@Bestandtype_ID, @Artiest_ID, @Genre_ID, @Album_ID, @Bestand, @Naam, @Duur)";
                 //hier maken we de parameters aan om de dingen te kunnen aanvullen
-                SqlParameter ParSong = new SqlParameter("@song", song.Song_ID);
+                SqlParameter ParBestandtype_ID = new SqlParameter("@Bestandtype_ID", song.Bestandtype_ID);
+                SqlParameter ParArtiest_ID = new SqlParameter("@Artiest_ID", song.Artiest_ID);
+                SqlParameter ParGenre_ID = new SqlParameter("@Genre_ID", song.Genre_ID);
+                SqlParameter ParAlbum_ID = new SqlParameter("@Album", song.Album_ID);
+                SqlParameter ParBestand = new SqlParameter("@Bestand", song.Bestand);
+                SqlParameter ParNaam = new SqlParameter("@Naam", song.Naam);
+                SqlParameter ParDuur = new SqlParameter("@Duur", song.Duur);
                 //hier sturen de opdracht naar de database
-                Database.ExcecuteSQL(sql, ParSong);
+                Database.ExcecuteSQL(sql, ParBestandtype_ID);
                 return true;
 
             }
@@ -61,9 +67,15 @@ namespace SoundAround
             try
             {
                 string sql = "UPDATE Song SET Naam=@Naam WHERE Song_ID=@SongID";
-                SqlParameter ParSong = new SqlParameter("@Naam", song.Naam);
                 SqlParameter ParSongID = new SqlParameter("@SongID", song.Song_ID);
-                Database.ExcecuteSQL(sql, ParSong, ParSongID);
+                SqlParameter ParBestandtype_ID = new SqlParameter("@Bestandtype_ID", song.Bestandtype_ID);
+                SqlParameter ParArtiest_ID = new SqlParameter("@Artiest_ID", song.Artiest_ID);
+                SqlParameter ParGenre_ID = new SqlParameter("@Genre_ID", song.Genre_ID);
+                SqlParameter ParAlbum_ID = new SqlParameter("@Album_ID", song.Album_ID);
+                SqlParameter ParBestand = new SqlParameter("@Bestand", song.Bestand);
+                SqlParameter ParNaam = new SqlParameter("@Naam", song.Naam);
+                SqlParameter ParDuur = new SqlParameter("@Duur", song.Duur);
+                Database.ExcecuteSQL(sql, ParSongID);
                 return true;
             }
             catch
