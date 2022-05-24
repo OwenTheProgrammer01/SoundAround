@@ -34,6 +34,15 @@ namespace SoundAround
         {
             Bestandtypen = BestandtypeDA.Ophalen();
             Songs = SongDA.Ophalen();
+            GUIInvullen();
+        }
+
+        public void GUIInvullen()
+        {
+            foreach (Song song in Songs)
+            {
+                lsbBestanden.Items.Add(song.Naam);
+            }
         }
 
         private void btnPlayPause_Click(object sender, RoutedEventArgs e)
@@ -66,10 +75,14 @@ namespace SoundAround
                         song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
                     }
                 }
-                song.Bestand = br.ReadBytes(Convert.ToInt32(song.Duur));
+                song.Artiest_ID = 1;
+                song.Genre_ID = 1;
+                song.Album_ID = 1;
+                song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
                 song.Naam = file.SafeFileName;
                 song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
-
+                SongDA.Toevoegen(song);
+                DatabaseOphalen();
             }
         }
     }
