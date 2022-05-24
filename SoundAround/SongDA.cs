@@ -47,7 +47,7 @@ namespace SoundAround
                 SqlParameter ParBestandtype_ID = new SqlParameter("@Bestandtype_ID", song.Bestandtype_ID);
                 SqlParameter ParArtiest_ID = new SqlParameter("@Artiest_ID", song.Artiest_ID);
                 SqlParameter ParGenre_ID = new SqlParameter("@Genre_ID", song.Genre_ID);
-                SqlParameter ParAlbum_ID = new SqlParameter("@Album", song.Album_ID);
+                SqlParameter ParAlbum_ID = new SqlParameter("@Album_ID", song.Album_ID);
                 SqlParameter ParBestand = new SqlParameter("@Bestand", song.Bestand);
                 SqlParameter ParNaam = new SqlParameter("@Naam", song.Naam);
                 SqlParameter ParDuur = new SqlParameter("@Duur", song.Duur);
