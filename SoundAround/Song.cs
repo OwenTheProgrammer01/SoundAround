@@ -10,7 +10,7 @@ namespace SoundAround
         public int Artiest_ID { get; set; }
         public int Genre_ID { get; set; }
         public int Album_ID { get; set; }
-        public object Bestand { get; set; }
+        public byte[] Bestand { get; set; }
         public string Naam { get; set; }
         public TimeSpan Duur { get; set; }
     }

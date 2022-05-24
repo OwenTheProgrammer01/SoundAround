@@ -60,11 +60,11 @@ namespace SoundAround
 
                 if (file.ShowDialog() == true)
                 {
+                    Song song = new Song();
                     Bestandtype bestandtype = new Bestandtype();
                     Artiest artiest = new Artiest();
                     Genre genre = new Genre();
                     Album album = new Album();
-                    Song song = new Song();
                     BinaryReader br = new BinaryReader(file.OpenFile());
 
                     bestandtype.bestandtype = file.DefaultExt;
@@ -80,7 +80,8 @@ namespace SoundAround
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
-                    song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
+                    byte[] bestand = br.ReadBytes((int)file.OpenFile().Length);
+                    song.Bestand = bestand;
                     song.Naam = file.SafeFileName;
                     song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
                     SongDA.Toevoegen(song);
