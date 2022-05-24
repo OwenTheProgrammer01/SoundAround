@@ -52,37 +52,44 @@ namespace SoundAround
 
         private void btnUpload_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog file = new OpenFileDialog();
-            file.DefaultExt = ".wav";
-            file.Filter = "WAV-bestand (.wav)|* .wav";
-
-            if (file.ShowDialog() == true)
+            try
             {
-                Bestandtype bestandtype = new Bestandtype();
-                Artiest artiest = new Artiest();
-                Genre genre = new Genre();
-                Album album = new Album();
-                Song song = new Song();
-                BinaryReader br = new BinaryReader(file.OpenFile());
+                OpenFileDialog file = new OpenFileDialog();
+                file.DefaultExt = ".wav";
+                file.Filter = "WAV-bestand (.wav)|* .wav";
 
-                bestandtype.bestandtype = file.DefaultExt;
-                BestandtypeDA.Toevoegen(bestandtype);
-                DatabaseOphalen();
-                foreach (Bestandtype _bestandtype in Bestandtypen)
+                if (file.ShowDialog() == true)
                 {
-                    if (_bestandtype == bestandtype)
+                    Bestandtype bestandtype = new Bestandtype();
+                    Artiest artiest = new Artiest();
+                    Genre genre = new Genre();
+                    Album album = new Album();
+                    Song song = new Song();
+                    BinaryReader br = new BinaryReader(file.OpenFile());
+
+                    bestandtype.bestandtype = file.DefaultExt;
+                    BestandtypeDA.Toevoegen(bestandtype);
+                    DatabaseOphalen();
+                    foreach (Bestandtype _bestandtype in Bestandtypen)
                     {
-                        song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
+                        if (_bestandtype.bestandtype == bestandtype.bestandtype)
+                        {
+                            song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
+                        }
                     }
+                    song.Artiest_ID = 1;
+                    song.Genre_ID = 1;
+                    song.Album_ID = 1;
+                    song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
+                    song.Naam = file.SafeFileName;
+                    song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
+                    SongDA.Toevoegen(song);
+                    DatabaseOphalen();
                 }
-                song.Artiest_ID = 1;
-                song.Genre_ID = 1;
-                song.Album_ID = 1;
-                song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
-                song.Naam = file.SafeFileName;
-                song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
-                SongDA.Toevoegen(song);
-                DatabaseOphalen();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
