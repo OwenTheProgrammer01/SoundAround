@@ -80,8 +80,11 @@ namespace SoundAround
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
-                    byte[] bestand = br.ReadBytes((int)file.OpenFile().Length);
-                    song.Bestand = bestand;
+                    byte[] buffer = new byte[1000000000];
+                    Stream bestand = file.OpenFile();
+                    bestand.Read(buffer, 0, buffer.Length);
+                    //song.Bestand
+                    //byte[] bestand = br.ReadBytes((int)file.OpenFile().Length);
                     song.Naam = file.SafeFileName;
                     song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
                     SongDA.Toevoegen(song);

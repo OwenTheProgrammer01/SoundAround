@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
 //toevoegen voor database
 using System.Data;
 using System.Data.SqlClient;
@@ -28,9 +30,11 @@ namespace SoundAround
                 song.Artiest_ID = int.Parse(SongDR["Artiest_ID"].ToString());
                 song.Genre_ID = int.Parse(SongDR["Genre_ID"].ToString());
                 song.Album_ID = int.Parse(SongDR["Album_ID"].ToString());
-                //song.Bestand = SongDR["Bestand"].ToString();
+                string str = SongDR["Bestand"].ToString();
+                byte[] bytes = Encoding.ASCII.GetBytes(str);
+                song.Bestand = bytes;
                 song.Naam = SongDR["Naam"].ToString();
-                //song.Duur = SongDR["Duur"].ToString();
+                song.Duur = TimeSpan.Parse(SongDR["Duur"].ToString());
                 //hier voegen we de klasse toe aan de lijst van de landen
                 Song.Add(song);
             }
