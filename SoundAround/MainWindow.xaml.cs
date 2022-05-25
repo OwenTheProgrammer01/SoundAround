@@ -28,6 +28,7 @@ namespace SoundAround
         public MainWindow()
         {
             InitializeComponent();
+            DatabaseOphalen();
         }
 
         public void DatabaseOphalen()
@@ -54,6 +55,8 @@ namespace SoundAround
         {
             try
             {
+                bool controle;
+
                 OpenFileDialog file = new OpenFileDialog();
                 file.DefaultExt = ".wav";
                 file.Filter = "WAV-bestand (.wav)|* .wav";
@@ -68,8 +71,17 @@ namespace SoundAround
                     BinaryReader br = new BinaryReader(file.OpenFile());
 
                     bestandtype.bestandtype = file.DefaultExt;
-                    BestandtypeDA.Toevoegen(bestandtype);
-                    DatabaseOphalen();
+                    controle = BestandtypeDA.Toevoegen(bestandtype);
+                    if (controle)
+                    {
+                        MessageBox.Show("Bestandtype upload gelukt");
+                        DatabaseOphalen();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Bestandtype upload gefaald");
+                    }
+
                     foreach (Bestandtype _bestandtype in Bestandtypen)
                     {
                         if (_bestandtype.bestandtype == bestandtype.bestandtype)
@@ -77,17 +89,29 @@ namespace SoundAround
                             song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
                         }
                     }
+
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
+
                     byte[] buffer = new byte[1000000000];
                     Stream bestand = file.OpenFile();
                     bestand.Read(buffer, 0, buffer.Length);
+
                     song.Bestand = br.ReadBytes((int)bestand.Length);
                     song.Naam = file.SafeFileName;
                     song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
-                    SongDA.Toevoegen(song);
-                    DatabaseOphalen();
+
+                    controle = SongDA.Toevoegen(song);
+                    if (controle)
+                    {
+                        MessageBox.Show("Song upload gelukt");
+                        DatabaseOphalen();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Song upload gefaald");
+                    }
                 }
             }
             catch (Exception ex)

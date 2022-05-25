@@ -36,7 +36,7 @@ namespace SoundAround
             try
             {
                 //hier geven we de sql string op
-                string sql = "INSERT INTO Bestandtype (Bestandtype) VALUES (@Betandtype)";
+                string sql = "INSERT INTO Bestandtype (Bestandtype) VALUES (@Bestandtype)";
                 //hier maken we de parameters aan om de dingen te kunnen aanvullen
                 SqlParameter ParBestandtype = new SqlParameter("@Bestandtype", Bestandtype.bestandtype);
                 //hier sturen de opdracht naar de database
@@ -54,8 +54,8 @@ namespace SoundAround
             try
             {
                 string sql = "UPDATE Bestandtype SET Bestandtype=@Bestandtype WHERE Bestandtype_ID=@Bestandtype_ID";
-                SqlParameter ParBestandtype_ID = new SqlParameter("@Genre_ID", Bestandtype.Bestandtype_ID);
-                SqlParameter ParBestandtype = new SqlParameter("@Genre", Bestandtype.bestandtype);
+                SqlParameter ParBestandtype_ID = new SqlParameter("@Bestandtype_ID", Bestandtype.Bestandtype_ID);
+                SqlParameter ParBestandtype = new SqlParameter("@Bestandtype", Bestandtype.bestandtype);
                 Database.ExcecuteSQL(sql, ParBestandtype_ID, ParBestandtype);
                 return true;
             }
