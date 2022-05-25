@@ -83,8 +83,7 @@ namespace SoundAround
                     byte[] buffer = new byte[1000000000];
                     Stream bestand = file.OpenFile();
                     bestand.Read(buffer, 0, buffer.Length);
-                    //song.Bestand
-                    //byte[] bestand = br.ReadBytes((int)file.OpenFile().Length);
+                    song.Bestand = br.ReadBytes((int)bestand.Length);
                     song.Naam = file.SafeFileName;
                     song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
                     SongDA.Toevoegen(song);
