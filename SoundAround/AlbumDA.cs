@@ -13,7 +13,7 @@ namespace SoundAround
             //we maken een lijst aan voor de landen in te plaatsen
             List<Album> Album = new List<Album>();
             //We maken het statement aan om de landen uit te lezen
-            string sSql = "Select * FROM dbo.Album";
+            string sSql = "Select Album_ID, Album FROM dbo.Album";
             //hier gaan we de verschillende dingen ophalen uit de database
             //we plaatsen dit in een datatabel
             DataTable AlbumDT = Database.GetDT(sSql);

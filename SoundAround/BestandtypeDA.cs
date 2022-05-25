@@ -13,7 +13,7 @@ namespace SoundAround
             //we maken een lijst aan voor de landen in te plaatsen
             List<Bestandtype> Bestandtype = new List<Bestandtype>();
             //We maken het statement aan om de landen uit te lezen
-            string sSql = "Select * FROM dbo.Bestandtype";
+            string sSql = "Select Bestandtype_ID, Bestandtype FROM dbo.Bestandtype";
             //hier gaan we de verschillende dingen ophalen uit de database
             //we plaatsen dit in een datatabel
             DataTable BestandtypeDT = Database.GetDT(sSql);

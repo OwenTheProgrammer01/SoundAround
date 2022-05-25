@@ -15,7 +15,7 @@ namespace SoundAround
             //we maken een lijst aan voor de landen in te plaatsen
             List<Song> Song = new List<Song>();
             //We maken het statement aan om de landen uit te lezen
-            string sSql = "Select * FROM dbo.Song";
+            string sSql = "Select Song_ID, Bestandtype_ID, Artiest_ID, Genre_ID, Album_ID, Bestand, Naam, Duur FROM dbo.Song";
             //hier gaan we de verschillende dingen ophalen uit de database
             //we plaatsen dit in een datatabel
             DataTable SongDT = Database.GetDT(sSql);
