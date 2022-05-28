@@ -1,6 +1,6 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Collections.Generic;
+using System.IO;
 //toevoegen voor database
 using System.Data;
 using System.Data.SqlClient;
@@ -31,8 +31,14 @@ namespace SoundAround
                 song.Genre_ID = int.Parse(SongDR["Genre_ID"].ToString());
                 song.Album_ID = int.Parse(SongDR["Album_ID"].ToString());
                 string str = SongDR["Bestand"].ToString();
-                byte[] bytes = Encoding.ASCII.GetBytes(str);
-                song.Bestand = bytes;
+                //byte[] bytes = Encoding.ASCII.GetBytes(str);
+                //song.Bestand = bytes;
+                MemoryStream stream = new MemoryStream();
+                StreamWriter writer = new StreamWriter(stream);
+                writer.Write(str);
+                writer.Flush();
+                stream.Position = 0;
+                song.Bestand = stream;
                 song.Naam = SongDR["Naam"].ToString();
                 song.Duur = SongDR["Duur"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen

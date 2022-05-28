@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
 using Microsoft.Win32;
+using System.Media;
 
 namespace SoundAround
 {
@@ -22,6 +23,8 @@ namespace SoundAround
     /// </summary>
     public partial class MainWindow : Window
     {
+        SoundPlayer player = new SoundPlayer();
+
         List<Song> Songs = new List<Song>();
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
 
@@ -40,6 +43,7 @@ namespace SoundAround
 
         public void GUIInvullen()
         {
+            lsbBestanden.Items.Clear();
             foreach (Song song in Songs)
             {
                 lsbBestanden.Items.Add(song.Naam);
@@ -48,7 +52,16 @@ namespace SoundAround
 
         private void btnPlayPause_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                int selectedSong = lsbBestanden.SelectedIndex;
+                player.Stream = Songs[selectedSong].Bestand;
+                player.Play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnUpload_Click(object sender, RoutedEventArgs e)
@@ -68,37 +81,36 @@ namespace SoundAround
                     Artiest artiest = new Artiest();
                     Genre genre = new Genre();
                     Album album = new Album();
-                    BinaryReader br = new BinaryReader(file.OpenFile());
+                    //BinaryReader br = new BinaryReader(file.OpenFile());
+                    //Stream bestand;
+                    byte[] data = File.ReadAllBytes(file.FileName);
+                    MemoryStream ms = new MemoryStream(data);
 
                     bestandtype.bestandtype = file.DefaultExt;
-                    controle = BestandtypeDA.Toevoegen(bestandtype);
-                    if (controle)
-                    {
-                        MessageBox.Show("Bestandtype upload gelukt");
-                        DatabaseOphalen();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Bestandtype upload gefaald");
-                    }
 
                     foreach (Bestandtype _bestandtype in Bestandtypen)
                     {
                         if (_bestandtype.bestandtype == bestandtype.bestandtype)
                         {
                             song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
+                            goto skip;
                         }
                     }
 
+                    BestandtypeDA.Toevoegen(bestandtype);
+
+                    skip:
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
 
-                    byte[] buffer = new byte[1000000000];
-                    Stream bestand = file.OpenFile();
-                    bestand.Read(buffer, 0, buffer.Length);
+                    //byte[] buffer = new byte[1000000000];
+                    //bestand = file.OpenFile();
+                    //bestand.Read(buffer, 0, buffer.Length);
 
-                    song.Bestand = br.ReadBytes((int)bestand.Length);
+                    //song.Bestand = br.ReadBytes((int)bestand.Length);
+
+                    song.Bestand = ms;
                     song.Naam = file.SafeFileName;
                     song.Duur = "0";
 
@@ -116,7 +128,7 @@ namespace SoundAround
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message);
             }
         }
     }
