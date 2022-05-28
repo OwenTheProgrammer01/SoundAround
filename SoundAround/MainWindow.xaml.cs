@@ -59,7 +59,7 @@ namespace SoundAround
 
                 OpenFileDialog file = new OpenFileDialog();
                 file.DefaultExt = ".wav";
-                file.Filter = "WAV-bestand (.wav)|* .wav";
+                file.Filter = "WAV-bestand (.wav)| * .wav";
 
                 if (file.ShowDialog() == true)
                 {
@@ -100,7 +100,7 @@ namespace SoundAround
 
                     song.Bestand = br.ReadBytes((int)bestand.Length);
                     song.Naam = file.SafeFileName;
-                    song.Duur = TimeSpan.FromSeconds(file.OpenFile().Length);
+                    song.Duur = "0";
 
                     controle = SongDA.Toevoegen(song);
                     if (controle)

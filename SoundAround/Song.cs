@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SoundAround
+﻿namespace SoundAround
 {
     internal class Song
     {
@@ -12,6 +10,6 @@ namespace SoundAround
         public int Album_ID { get; set; }
         public byte[] Bestand { get; set; }
         public string Naam { get; set; }
-        public TimeSpan Duur { get; set; }
+        public string Duur { get; set; }
     }
 }

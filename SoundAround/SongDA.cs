@@ -34,7 +34,7 @@ namespace SoundAround
                 byte[] bytes = Encoding.ASCII.GetBytes(str);
                 song.Bestand = bytes;
                 song.Naam = SongDR["Naam"].ToString();
-                song.Duur = TimeSpan.Parse(SongDR["Duur"].ToString());
+                song.Duur = SongDR["Duur"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen
                 Song.Add(song);
             }
