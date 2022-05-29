@@ -83,7 +83,6 @@ namespace SoundAround
                     Genre genre = new Genre();
                     Album album = new Album();
                     //BinaryReader br = new BinaryReader(file.OpenFile());
-                    //Stream bestand;
                     byte[] data = File.ReadAllBytes(file.FileName);
                     MemoryStream ms = new MemoryStream(data);
 
@@ -111,7 +110,7 @@ namespace SoundAround
 
                     //song.Bestand = br.ReadBytes((int)bestand.Length);
 
-                    song.Bestand = ms;
+                    //song.Bestand = ;
                     song.Naam = file.SafeFileName;
                     song.Duur = "0";
 
