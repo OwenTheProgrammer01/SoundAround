@@ -56,6 +56,7 @@ namespace SoundAround
             try
             {
                 bool controle;
+                string error;
 
                 OpenFileDialog file = new OpenFileDialog();
                 file.DefaultExt = ".wav";
@@ -74,12 +75,11 @@ namespace SoundAround
                     controle = BestandtypeDA.Toevoegen(bestandtype);
                     if (controle)
                     {
-                        MessageBox.Show("Bestandtype upload gelukt");
-                        DatabaseOphalen();
+                        error = "Bestandtype upload gelukt";
                     }
                     else
                     {
-                        MessageBox.Show("Bestandtype upload gefaald");
+                        error = "Bestandtype upload gefaald";
                     }
 
                     foreach (Bestandtype _bestandtype in Bestandtypen)
@@ -87,8 +87,11 @@ namespace SoundAround
                         if (_bestandtype.bestandtype == bestandtype.bestandtype)
                         {
                             song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
+                            goto skip;
                         }
                     }
+                    
+                    skip:;
 
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
@@ -105,13 +108,16 @@ namespace SoundAround
                     controle = SongDA.Toevoegen(song);
                     if (controle)
                     {
-                        MessageBox.Show("Song upload gelukt");
-                        DatabaseOphalen();
+                        error = "Song upload gelukt";
                     }
                     else
                     {
-                        MessageBox.Show("Song upload gefaald");
+                        error = "Song upload gefaald";
                     }
+
+                    MessageBox.Show(error);
+
+                    DatabaseOphalen();
                 }
             }
             catch (Exception ex)
