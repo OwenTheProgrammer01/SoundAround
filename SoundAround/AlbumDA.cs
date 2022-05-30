@@ -23,7 +23,7 @@ namespace SoundAround
                 Album artiest = new Album();
                 //oEvaluatie.iAccountID = Int32.Parse(EvaluatieDR["Account_ID"].ToString());
                 //hier vullen we de gegevens in in de aangemaakte klasse
-                artiest.Album_ID = int.Parse(AlbumDR["Album_ID"].ToString());
+                artiest.Album_ID = (int)AlbumDR["Album_ID"];
                 artiest.album = AlbumDR["Album"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen
                 Album.Add(artiest);

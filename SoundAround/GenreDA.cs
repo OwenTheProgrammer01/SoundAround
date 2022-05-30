@@ -23,7 +23,7 @@ namespace SoundAround
                 Genre genre = new Genre();
                 //oEvaluatie.iAccountID = Int32.Parse(EvaluatieDR["Account_ID"].ToString());
                 //hier vullen we de gegevens in in de aangemaakte klasse
-                genre.Genre_ID = int.Parse(GenreDR["Genre_ID"].ToString());
+                genre.Genre_ID = (int) GenreDR["Genre_ID"];
                 genre.genre = GenreDR["Genre"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen
                 Genre.Add(genre);

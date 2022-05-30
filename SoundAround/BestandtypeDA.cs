@@ -23,7 +23,7 @@ namespace SoundAround
                 Bestandtype bestandtype = new Bestandtype();
                 //oEvaluatie.iAccountID = Int32.Parse(EvaluatieDR["Account_ID"].ToString());
                 //hier vullen we de gegevens in in de aangemaakte klasse
-                bestandtype.Bestandtype_ID = int.Parse(BestandtypeDR["Bestandtype_ID"].ToString());
+                bestandtype.Bestandtype_ID = (int) BestandtypeDR["Bestandtype_ID"];
                 bestandtype.bestandtype = BestandtypeDR["Bestandtype"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen
                 Bestandtype.Add(bestandtype);
