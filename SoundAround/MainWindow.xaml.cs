@@ -28,6 +28,8 @@ namespace SoundAround
         List<Song> Songs = new List<Song>();
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
 
+        int selectedSong;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,7 +56,7 @@ namespace SoundAround
         {
             try
             {
-                int selectedSong = lsbBestanden.SelectedIndex;
+                selectedSong = lsbBestanden.SelectedIndex;
                 MemoryStream ms = new MemoryStream(Songs[selectedSong].Bestand);
                 player.Stream = ms;
                 player.Play();
