@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Collections.Generic;
+using System;
 using System.IO;
 //toevoegen voor database
 using System.Data;
@@ -25,20 +26,12 @@ namespace SoundAround
                 Song song = new Song();
                 //oEvaluatie.iAccountID = Int32.Parse(EvaluatieDR["Account_ID"].ToString());
                 //hier vullen we de gegevens in in de aangemaakte klasse
-                song.Song_ID = int.Parse(SongDR["Song_ID"].ToString());
-                song.Bestandtype_ID = int.Parse(SongDR["Bestandtype_ID"].ToString());
-                song.Artiest_ID = int.Parse(SongDR["Artiest_ID"].ToString());
-                song.Genre_ID = int.Parse(SongDR["Genre_ID"].ToString());
-                song.Album_ID = int.Parse(SongDR["Album_ID"].ToString());
-                string str = SongDR["Bestand"].ToString();
-                //byte[] bytes = Encoding.ASCII.GetBytes(str);
-                //song.Bestand = bytes;
-                MemoryStream stream = new MemoryStream();
-                StreamWriter writer = new StreamWriter(stream);
-                writer.Write(str);
-                writer.Flush();
-                stream.Position = 0;
-                song.Bestand = stream;
+                song.Song_ID = (int) SongDR["Song_ID"];
+                song.Bestandtype_ID = (int) SongDR["Bestandtype_ID"];
+                song.Artiest_ID = (int) SongDR["Artiest_ID"];
+                song.Genre_ID = (int) SongDR["Genre_ID"];
+                song.Album_ID = (int) SongDR["Album_ID"];
+                song.Bestand = (byte[]) SongDR["Bestand"];
                 song.Naam = SongDR["Naam"].ToString();
                 song.Duur = SongDR["Duur"].ToString();
                 //hier voegen we de klasse toe aan de lijst van de landen

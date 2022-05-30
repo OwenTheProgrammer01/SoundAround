@@ -55,7 +55,7 @@ namespace SoundAround
             try
             {
                 int selectedSong = lsbBestanden.SelectedIndex;
-                player.Stream = Songs[selectedSong].Bestand;
+                //player.Stream = ;
                 player.Play();
             }
             catch (Exception ex)
@@ -82,9 +82,8 @@ namespace SoundAround
                     Artiest artiest = new Artiest();
                     Genre genre = new Genre();
                     Album album = new Album();
-                    //BinaryReader br = new BinaryReader(file.OpenFile());
-                    byte[] data = File.ReadAllBytes(file.FileName);
-                    MemoryStream ms = new MemoryStream(data);
+                    
+                    BinaryReader br = new BinaryReader(file.OpenFile());
 
                     bestandtype.bestandtype = file.DefaultExt;
 
@@ -103,14 +102,7 @@ namespace SoundAround
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
-
-                    //byte[] buffer = new byte[1000000000];
-                    //bestand = file.OpenFile();
-                    //bestand.Read(buffer, 0, buffer.Length);
-
-                    //song.Bestand = br.ReadBytes((int)bestand.Length);
-
-                    //song.Bestand = ;
+                    song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
                     song.Naam = file.SafeFileName;
                     song.Duur = "0";
 
