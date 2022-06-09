@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Viewbox Stretch="UniformToFill">
-        <Grid Height="450" Width="800">
+        <Grid Height="435" Width="800">
             <ListBox x:Name="lsbBestanden" Margin="10,10,520,146"/>
             <MediaElement x:Name="mdePlayer" HorizontalAlignment="Left" Height="295" Margin="295,10,0,0" VerticalAlignment="Top" Width="480"/>
             <Button x:Name="btnPlayPause" Content="Play/Pause" HorizontalAlignment="Left" Margin="10,309,0,0" VerticalAlignment="Top" Height="56" Width="92" Click="btnPlayPause_Click"/>

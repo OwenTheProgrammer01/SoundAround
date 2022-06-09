@@ -23,8 +23,10 @@ namespace SoundAround
     /// </summary>
     public partial class MainWindow : Window
     {
+        //soundplayer aanmaken
         SoundPlayer player = new SoundPlayer();
 
+        //lijsten aanmaken
         List<Song> Songs = new List<Song>();
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
 
