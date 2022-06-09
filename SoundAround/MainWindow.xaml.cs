@@ -28,6 +28,8 @@ namespace SoundAround
         List<Song> Songs = new List<Song>();
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
 
+        int selectedSong;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,7 +56,7 @@ namespace SoundAround
         {
             try
             {
-                int selectedSong = lsbBestanden.SelectedIndex;
+                selectedSong = lsbBestanden.SelectedIndex;
                 MemoryStream ms = new MemoryStream(Songs[selectedSong].Bestand);
                 player.Stream = ms;
                 player.Play();
@@ -84,6 +86,8 @@ namespace SoundAround
                     Genre genre = new Genre();
                     Album album = new Album();
                     BinaryReader br = new BinaryReader(file.OpenFile());
+                    MemoryStream ms;
+                    SoundPlayer sp = new SoundPlayer();
 
                     bestandtype.bestandtype = file.DefaultExt;
 
@@ -103,6 +107,8 @@ namespace SoundAround
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
                     song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
+                    ms = new MemoryStream(song.Bestand);
+                    sp.Stream = ms;
                     song.Naam = file.SafeFileName;
                     song.Duur = "0";
 
