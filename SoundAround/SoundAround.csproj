@@ -67,7 +67,7 @@
     <Compile Include="GenreDA.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="SongDA.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="SoundAround.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -76,8 +76,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DatabaseConnectie.cs" />
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="SoundAround.xaml.cs">
+      <DependentUpon>SoundAround.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
