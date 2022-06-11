@@ -19,9 +19,9 @@ using System.Media;
 namespace SoundAround
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MusicPlayer.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MusicPlayer : Window
     {
         //soundplayer aanmaken
         SoundPlayer player = new SoundPlayer();
@@ -32,7 +32,7 @@ namespace SoundAround
 
         int selectedSong;
 
-        public MainWindow()
+        public MusicPlayer()
         {
             InitializeComponent();
             DatabaseOphalen();
