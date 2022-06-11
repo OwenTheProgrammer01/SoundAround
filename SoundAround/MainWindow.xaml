@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="SoundAround" Height="393" Width="309" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Viewbox Stretch="UniformToFill" HorizontalAlignment="Left" Width="800" Height="435" VerticalAlignment="Top">
         <Grid Height="435" Width="800">
             <ListBox x:Name="lsbBestanden" Margin="10,10,0,0" HorizontalAlignment="Left" Width="270" Height="279" VerticalAlignment="Top"/>
