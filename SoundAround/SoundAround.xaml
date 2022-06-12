@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="wpfSoundAround" x:Class="SoundAround.soundaround"
         mc:Ignorable="d"
-        Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF272727">
+        Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF272727" Icon="/Resources/Music-icon.png">
     <Viewbox x:Name="vwbSoundAround" Stretch="UniformToFill" Margin="0,0,0,-1">
         <Grid x:Name="grdSoundAround" Height="435" Width="800" Visibility="Visible">
             <Rectangle x:Name="rctBackgroundGrid1" HorizontalAlignment="Left" Height="340" Margin="0  ,0  ,0,0" VerticalAlignment="Top" Width="150" Fill="#FF202020" Stroke="Black" StrokeThickness="0.5"/>
@@ -19,9 +19,9 @@
                         <ImageBrush ImageSource="/Resources/search-icon.png"/>
                     </Button.Background>
                 </Button>
-                <RadioButton x:Name="rbtStart" Content="Start" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" IsChecked="True"/>
-                <RadioButton x:Name="rbtMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
-                <RadioButton x:Name="rbtWachtrij" Content="Wachtrij" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
+                <Button x:Name="rbtStart" Content="Start" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
+                <Button x:Name="rbtMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
+                <Button x:Name="rbtWachtrij" Content="Wachtrij" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
             </Grid>
             <Grid x:Name="grdStart" Height="340" Width="650" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
