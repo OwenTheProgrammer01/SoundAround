@@ -22,10 +22,12 @@
                 <Button x:Name="btnStart" Content="Start" HorizontalAlignment="Center" Margin="0,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="White" Padding="5,-1,0,0" BorderThickness="0,0,0,1" Background="{x:Null}" Click="btnStart_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
                 <Button x:Name="btnMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Center" Margin="0,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="White" Padding="5,-1,0,0" BorderThickness="0,0,0,0" Background="{x:Null}" Click="btnMuziekbibliotheek_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
                 <Button x:Name="btnWachtrij" Content="Wachtrij" HorizontalAlignment="Center" Margin="0,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="White" Padding="5,-1,0,0" BorderThickness="0,0,0,0" Background="{x:Null}" Click="btnWachtrij_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
+                <Image HorizontalAlignment="Center" Height="100" Margin="0,190,0,0" VerticalAlignment="Top" Width="100" Source="/Resources/SoundAround-Logo.png"/>
             </Grid>
             <Grid x:Name="grdStart" Height="340" Width="650" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
                 <Label x:Name="lblRecenteMedia" Content="Recente media" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5"/>
+                <Label x:Name="lblComingSoon" Content="Coming soon!" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" FontSize="72"/>
             </Grid>
             <Grid x:Name="grdMuziekbibliotheek" Height="340" Width="650" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblMuziekbibliotheek" Content="Muziek" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
