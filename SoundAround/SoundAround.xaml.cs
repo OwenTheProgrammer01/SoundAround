@@ -18,6 +18,30 @@ namespace SoundAround
             DatabaseOphalen();
         }
 
+        private void btnStart_Click(object sender, RoutedEventArgs e)
+        {
+            //grid zichtbaar maken en de andere niet zichtbaar
+            grdStart.Visibility = Visibility.Visible;
+            grdMuziekbibliotheek.Visibility = Visibility.Hidden;
+            grdWachtrij.Visibility = Visibility.Hidden;
+        }
+
+        private void btnMuziekbibliotheek_Click(object sender, RoutedEventArgs e)
+        {
+            //grid zichtbaar maken en de andere niet zichtbaar
+            grdStart.Visibility = Visibility.Hidden;
+            grdMuziekbibliotheek.Visibility = Visibility.Visible;
+            grdWachtrij.Visibility = Visibility.Hidden;
+        }
+
+        private void btnWachtrij_Click(object sender, RoutedEventArgs e)
+        {
+            //grid zichtbaar maken en de andere niet zichtbaar
+            grdStart.Visibility = Visibility.Hidden;
+            grdMuziekbibliotheek.Visibility = Visibility.Hidden;
+            grdWachtrij.Visibility = Visibility.Visible;
+        }
+
         //soundplayer aanmaken
         SoundPlayer player = new SoundPlayer();
 

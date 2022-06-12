@@ -19,9 +19,9 @@
                         <ImageBrush ImageSource="/Resources/search-icon.png"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="rbtStart" Content="Start" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
-                <Button x:Name="rbtMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
-                <Button x:Name="rbtWachtrij" Content="Wachtrij" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
+                <Button x:Name="btnStart" Content="Start" HorizontalAlignment="Center" Margin="0,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" Click="btnStart_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
+                <Button x:Name="btnMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Center" Margin="0,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" Click="btnMuziekbibliotheek_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
+                <Button x:Name="btnWachtrij" Content="Wachtrij" HorizontalAlignment="Center" Margin="0,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" Click="btnWachtrij_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
             </Grid>
             <Grid x:Name="grdStart" Height="340" Width="650" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
