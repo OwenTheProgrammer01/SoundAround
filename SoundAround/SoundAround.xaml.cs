@@ -12,6 +12,12 @@ namespace SoundAround
     /// </summary>
     public partial class soundaround : Window
     {
+        public soundaround()
+        {
+            InitializeComponent();
+            DatabaseOphalen();
+        }
+
         //soundplayer aanmaken
         SoundPlayer player = new SoundPlayer();
 
@@ -20,12 +26,6 @@ namespace SoundAround
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
 
         int selectedSong;
-
-        public soundaround()
-        {
-            InitializeComponent();
-            DatabaseOphalen();
-        }
 
         public void DatabaseOphalen()
         {

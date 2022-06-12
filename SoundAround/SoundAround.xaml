@@ -5,12 +5,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="wpfSoundAround" x:Class="SoundAround.soundaround"
         mc:Ignorable="d"
-        Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF202020">
     <Viewbox Stretch="UniformToFill" Margin="0,0,0,-1">
         <Grid Height="435" Width="800">
-            <ListBox x:Name="lsbBestanden" Margin="10,10,0,0" HorizontalAlignment="Left" Width="270" Height="279" VerticalAlignment="Top"/>
-            <Button x:Name="btnPlayPause" Content="Play/Pause" HorizontalAlignment="Left" Margin="10,309,0,0" VerticalAlignment="Top" Height="56" Width="92" Click="btnPlayPause_Click"/>
-            <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" Margin="107,309,0,0" VerticalAlignment="Top" Height="56" Width="92" Click="btnUpload_Click"/>
+            <TextBox x:Name="txbZoeken" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Foreground="#FFC9C9C9" Background="{x:Null}" BorderThickness="0,0,0,1" BorderBrush="#FF9A9A9A" Padding="5,0,0,0" UseLayoutRounding="False" AutomationProperties.IsColumnHeader="True" Text="Zoeken"/>
+            <Button x:Name="btnZoeken" Content="" HorizontalAlignment="Left" Margin="123,10,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="19" Height="17">
+                <Button.Background>
+                    <ImageBrush ImageSource="/Resources/search-icon.png"/>
+                </Button.Background>
+            </Button>
+            <RadioButton x:Name="rbtStart" Content="Start" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" IsChecked="True"/>
+            <RadioButton x:Name="rbtMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
+            <RadioButton x:Name="rbtWachtrij" Content="Wachtrij" HorizontalAlignment="Left" Margin="10,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
+            <RadioButton x:Name="rbtAfspeellijsten" Content="Afspeellijsten" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}"/>
+            <Button x:Name="btnNummers" Content="Nummers" HorizontalAlignment="Left" Margin="150,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5"/>
+            <Button x:Name="btnAlbums" Content="Albums" HorizontalAlignment="Left" Margin="217,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5"/>
+            <ListBox x:Name="lsbBestanden" Margin="150,40,0,0" HorizontalAlignment="Left" Width="643" Height="298" VerticalAlignment="Top" Background="#FF272727" BorderBrush="{x:Null}" Foreground="White"/>
         </Grid>
     </Viewbox>
 </Window>
