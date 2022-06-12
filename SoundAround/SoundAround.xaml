@@ -19,9 +19,9 @@
                         <ImageBrush ImageSource="/Resources/search-icon.png"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="btnStart" Content="Start" HorizontalAlignment="Center" Margin="0,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" Click="btnStart_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
-                <Button x:Name="btnMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Center" Margin="0,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" Click="btnMuziekbibliotheek_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
-                <Button x:Name="btnWachtrij" Content="Wachtrij" HorizontalAlignment="Center" Margin="0,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="{x:Null}" Padding="5,-1,0,0" BorderThickness="1,1,1,1" Background="{x:Null}" Click="btnWachtrij_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
+                <Button x:Name="btnStart" Content="Start" HorizontalAlignment="Center" Margin="0,40,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="White" Padding="5,-1,0,0" BorderThickness="0,0,0,1" Background="{x:Null}" Click="btnStart_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
+                <Button x:Name="btnMuziekbibliotheek" Content="Muziekbibliotheek" HorizontalAlignment="Center" Margin="0,80,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="White" Padding="5,-1,0,0" BorderThickness="0,0,0,0" Background="{x:Null}" Click="btnMuziekbibliotheek_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
+                <Button x:Name="btnWachtrij" Content="Wachtrij" HorizontalAlignment="Center" Margin="0,120,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="White" Padding="5,-1,0,0" BorderThickness="0,0,0,0" Background="{x:Null}" Click="btnWachtrij_Click" Width="130" HorizontalContentAlignment="Left" Height="35"/>
             </Grid>
             <Grid x:Name="grdStart" Height="340" Width="650" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
@@ -29,10 +29,10 @@
             </Grid>
             <Grid x:Name="grdMuziekbibliotheek" Height="340" Width="650" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblMuziek" Content="Muziek" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
-                <Button x:Name="btnNummers" Content="Nummers" HorizontalAlignment="Left" Margin="82,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,1" Padding="5,5,5,5" Height="26"/>
-                <Button x:Name="btnAlbums" Content="Albums" HorizontalAlignment="Left" Margin="149,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5"/>
-                <Button x:Name="btnArtiesten" Content="Artiesten" HorizontalAlignment="Left" Margin="204,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5"/>
-                <Button x:Name="btnNummersToevoegen" Content="Nummer toevoegen" HorizontalAlignment="Left" Margin="523,10,0,0" VerticalAlignment="Top" Background="#FF343434" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="34"/>
+                <Button x:Name="btnNummers" Content="Nummers" HorizontalAlignment="Left" Margin="82,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,1" Padding="5,5,5,5" Height="26" Click="btnNummers_Click"/>
+                <Button x:Name="btnAlbums" Content="Albums" HorizontalAlignment="Left" Margin="149,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Click="btnAlbums_Click"/>
+                <Button x:Name="btnArtiesten" Content="Artiesten" HorizontalAlignment="Left" Margin="204,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Click="btnArtiesten_Click"/>
+                <Button x:Name="btnNummersToevoegen" Content="Nummer toevoegen" HorizontalAlignment="Left" Margin="523,10,0,0" VerticalAlignment="Top" Background="#FF343434" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="34" Click="btnNummersToevoegen_Click"/>
             </Grid>
             <Grid x:Name="grdWachtrij" Height="340" Width="650" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblMuziekBiblitheek" Content="Wachtrij voor afspelen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>

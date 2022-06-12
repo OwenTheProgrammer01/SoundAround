@@ -12,6 +12,19 @@ namespace SoundAround
     /// </summary>
     public partial class soundaround : Window
     {
+        //soundplayer aanmaken
+        SoundPlayer player = new SoundPlayer();
+
+        //lijsten aanmaken
+        List<Album> Albums = new List<Album>();
+        List<Artiest> Artiesten = new List<Artiest>();
+        List<Bestandtype> Bestandtypen = new List<Bestandtype>();
+        List<Genre> Genres = new List<Genre>();
+        List<Song> Songs = new List<Song>();
+
+        //variabelen aanmaken
+        int selectedSong;
+
         public soundaround()
         {
             InitializeComponent();
@@ -24,6 +37,11 @@ namespace SoundAround
             grdStart.Visibility = Visibility.Visible;
             grdMuziekbibliotheek.Visibility = Visibility.Hidden;
             grdWachtrij.Visibility = Visibility.Hidden;
+
+            //dikte van de rand veranderen
+            btnStart.BorderThickness = new Thickness(0, 0, 0, 1);
+            btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
         }
 
         private void btnMuziekbibliotheek_Click(object sender, RoutedEventArgs e)
@@ -32,6 +50,11 @@ namespace SoundAround
             grdStart.Visibility = Visibility.Hidden;
             grdMuziekbibliotheek.Visibility = Visibility.Visible;
             grdWachtrij.Visibility = Visibility.Hidden;
+
+            //dikte van de rand veranderen
+            btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 1);
+            btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
         }
 
         private void btnWachtrij_Click(object sender, RoutedEventArgs e)
@@ -40,49 +63,38 @@ namespace SoundAround
             grdStart.Visibility = Visibility.Hidden;
             grdMuziekbibliotheek.Visibility = Visibility.Hidden;
             grdWachtrij.Visibility = Visibility.Visible;
+
+            //dikte van de rand veranderen
+            btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 1);
         }
 
-        //soundplayer aanmaken
-        SoundPlayer player = new SoundPlayer();
-
-        //lijsten aanmaken
-        List<Song> Songs = new List<Song>();
-        List<Bestandtype> Bestandtypen = new List<Bestandtype>();
-
-        int selectedSong;
-
-        public void DatabaseOphalen()
+        private void btnNummers_Click(object sender, RoutedEventArgs e)
         {
-            Bestandtypen = BestandtypeDA.Ophalen();
-            Songs = SongDA.Ophalen();
-            GUIInvullen();
+            //dikte van de rand veranderen
+            btnNummers.BorderThickness = new Thickness(0, 0, 0, 1);
+            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
         }
 
-        public void GUIInvullen()
+        private void btnAlbums_Click(object sender, RoutedEventArgs e)
         {
-            lsbBestanden.Items.Clear();
-            foreach (Song song in Songs)
-            {
-                lsbBestanden.Items.Add(song.Naam);
-            }
+            //dikte van de rand veranderen
+            btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 1);
+            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
         }
 
-        private void btnPlayPause_Click(object sender, RoutedEventArgs e)
+        private void btnArtiesten_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                selectedSong = lsbBestanden.SelectedIndex;
-                MemoryStream ms = new MemoryStream(Songs[selectedSong].Bestand);
-                player.Stream = ms;
-                player.Play();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //dikte van de rand veranderen
+            btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
+            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 1);
         }
 
-        private void btnUpload_Click(object sender, RoutedEventArgs e)
+        private void btnNummersToevoegen_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -141,6 +153,37 @@ namespace SoundAround
 
                     DatabaseOphalen();
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public void DatabaseOphalen()
+        {
+            Bestandtypen = BestandtypeDA.Ophalen();
+            Songs = SongDA.Ophalen();
+            GUIInvullen();
+        }
+
+        public void GUIInvullen()
+        {
+            lsbBestanden.Items.Clear();
+            foreach (Song song in Songs)
+            {
+                lsbBestanden.Items.Add(song.Naam);
+            }
+        }
+
+        private void btnPlayPause_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                selectedSong = lsbBestanden.SelectedIndex;
+                MemoryStream ms = new MemoryStream(Songs[selectedSong].Bestand);
+                player.Stream = ms;
+                player.Play();
             }
             catch (Exception ex)
             {
