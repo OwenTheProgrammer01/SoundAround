@@ -1,9 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Media;
 using System.Windows;
+using System.Windows.Controls;
+using Microsoft.Win32;
 
 namespace SoundAround
 {
@@ -13,7 +13,7 @@ namespace SoundAround
     public partial class soundaround : Window
     {
         //soundplayer aanmaken
-        SoundPlayer player = new SoundPlayer();
+        MediaElement player = new MediaElement();
 
         //lijsten aanmaken
         List<Album> Albums = new List<Album>();
@@ -25,6 +25,7 @@ namespace SoundAround
         //variabelen aanmaken
         string zoekopdracht = "";
         int selectedSong;
+        int selectedType;
         bool shuffle = false;
         bool play = false;
         bool repeat = false;
@@ -33,31 +34,20 @@ namespace SoundAround
         {
             InitializeComponent();
             DatabaseOphalen();
+            player.Volume = 1;
+            player.Clock = null;
         }
 
         public void DatabaseOphalen()
         {
             try
             {
+                //de lijsten invullen met de database gegevens
+                Albums = AlbumDA.Ophalen();
+                Artiesten = ArtiestDA.Ophalen();
                 Bestandtypen = BestandtypeDA.Ophalen();
+                Genres = GenreDA.Ophalen();
                 Songs = SongDA.Ophalen();
-                GUIInvullen();
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message);
-            }
-        }
-
-        public void GUIInvullen()
-        {
-            try
-            {
-                lsbBestanden.Items.Clear();
-                foreach (Song song in Songs)
-                {
-                    lsbBestanden.Items.Add(song.Naam);
-                }
             }
             catch (Exception error)
             {
@@ -90,6 +80,9 @@ namespace SoundAround
                 btnStart.BorderThickness = new Thickness(0, 0, 0, 1);
                 btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
+                
+                //listbox leegmaken
+                lsbBestanden.Items.Clear();
             }
             catch (Exception error)
             {
@@ -110,6 +103,15 @@ namespace SoundAround
                 btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 1);
                 btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
+
+                //listbox leegmaken
+                lsbBestanden.Items.Clear();
+
+                //listbox invullen
+                foreach (Song song in Songs)
+                {
+                    lsbBestanden.Items.Add(song.Naam);
+                }
             }
             catch (Exception error)
             {
@@ -130,6 +132,9 @@ namespace SoundAround
                 btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 1);
+
+                //listbox leegmaken
+                lsbBestanden.Items.Clear();
             }
             catch (Exception error)
             {
@@ -145,6 +150,9 @@ namespace SoundAround
                 btnNummers.BorderThickness = new Thickness(0, 0, 0, 1);
                 btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
+
+                //listbox leegmaken
+                lsbBestanden.Items.Clear();
             }
             catch (Exception error)
             {
@@ -160,6 +168,9 @@ namespace SoundAround
                 btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnAlbums.BorderThickness = new Thickness(0, 0, 0, 1);
                 btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
+
+                //listbox leegmaken
+                lsbBestanden.Items.Clear();
             }
             catch (Exception error)
             {
@@ -175,6 +186,9 @@ namespace SoundAround
                 btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
                 btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 1);
+
+                //listbox leegmaken
+                lsbBestanden.Items.Clear();
             }
             catch (Exception error)
             {
@@ -186,7 +200,6 @@ namespace SoundAround
         {
             try
             {
-                bool controle;
                 string error;
 
                 OpenFileDialog file = new OpenFileDialog();
@@ -202,9 +215,8 @@ namespace SoundAround
                     Album album = new Album();
                     BinaryReader br = new BinaryReader(file.OpenFile());
                     MemoryStream ms;
-                    SoundPlayer sp = new SoundPlayer();
 
-                    bestandtype.bestandtype = file.DefaultExt;
+                    bestandtype.bestandtype = Path.GetExtension(file.FileName);
 
                     foreach (Bestandtype _bestandtype in Bestandtypen)
                     {
@@ -223,12 +235,10 @@ namespace SoundAround
                     song.Album_ID = 1;
                     song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
                     ms = new MemoryStream(song.Bestand);
-                    sp.Stream = ms;
-                    song.Naam = file.SafeFileName;
+                    song.Naam = Path.GetFileNameWithoutExtension(file.FileName);
                     song.Duur = "0";
 
-                    controle = SongDA.Toevoegen(song);
-                    if (controle)
+                    if (SongDA.Toevoegen(song))
                     {
                         error = "Song upload gelukt";
                     }
@@ -241,21 +251,6 @@ namespace SoundAround
 
                     DatabaseOphalen();
                 }
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message);
-            }
-        }
-
-        private void btnPlayPause_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                selectedSong = lsbBestanden.SelectedIndex;
-                MemoryStream ms = new MemoryStream(Songs[selectedSong].Bestand);
-                player.Stream = ms;
-                player.Play();
             }
             catch (Exception error)
             {
@@ -298,7 +293,16 @@ namespace SoundAround
         {
             try
             {
-
+                if (!play)
+                {
+                    player.Play();
+                    play = true;
+                }
+                else
+                {
+                    player.Pause();
+                    play = false;
+                }
             }
             catch (Exception error)
             {
@@ -330,11 +334,29 @@ namespace SoundAround
             }
         }
 
-        private void lsbBestanden_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void lsbBestanden_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
             {
-
+                if (lsbBestanden.SelectedIndex != -1)
+                {
+                    selectedSong = lsbBestanden.SelectedIndex;
+                    MemoryStream ms = new MemoryStream(Songs[selectedSong].Bestand);
+                    for (int i = 0; i < Bestandtypen.Count; i++)
+                    {
+                        if (Songs[selectedSong].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                        {
+                            selectedType = i;
+                        }
+                    }
+                    string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[selectedSong].Naam}{Bestandtypen[selectedType].bestandtype}";
+                    File.WriteAllBytes(filepath, ms.ToArray());
+                    player.Source = new Uri(filepath);
+                    player.LoadedBehavior = MediaState.Manual;
+                    player.UnloadedBehavior = MediaState.Manual;
+                    player.Play();
+                    play = true;
+                }
             }
             catch (Exception error)
             {

@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="wpfSoundAround" x:Class="SoundAround.soundaround"
         mc:Ignorable="d"
-        Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF272727" Icon="/Resources/Music-icon.png">
+        Title="SoundAround" Height="450" Width="800" WindowStartupLocation="CenterScreen" WindowState="Maximized" Background="#FF272727" Icon="/Resources/SoundAround-Logo.png">
     <Viewbox x:Name="vwbSoundAround" Stretch="UniformToFill" Margin="0,0,0,-1">
         <Grid x:Name="grdSoundAround" Height="435" Width="800" Visibility="Visible">
             <Rectangle x:Name="rctBackgroundGrid1" HorizontalAlignment="Left" Height="340" Margin="0  ,0  ,0,0" VerticalAlignment="Top" Width="150" Fill="#FF202020" Stroke="Black" StrokeThickness="0.5"/>
