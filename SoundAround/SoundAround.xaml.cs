@@ -24,7 +24,6 @@ namespace SoundAround
         List<Album> Albums = new List<Album>();
         List<Artiest> Artiesten = new List<Artiest>();
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
-        List<Genre> Genres = new List<Genre>();
         List<Song> Songs = new List<Song>();
         List<Song> Wachtrij = new List<Song>();
 
@@ -68,7 +67,6 @@ namespace SoundAround
                 Albums = AlbumDA.Ophalen();
                 Artiesten = ArtiestDA.Ophalen();
                 Bestandtypen = BestandtypeDA.Ophalen();
-                Genres = GenreDA.Ophalen();
                 Songs = SongDA.Ophalen();
                 invullenGUI();
             }
@@ -347,7 +345,6 @@ namespace SoundAround
                     Song song = new Song();
                     Bestandtype bestandtype = new Bestandtype();
                     Artiest artiest = new Artiest();
-                    Genre genre = new Genre();
                     Album album = new Album();
                     BinaryReader br = new BinaryReader(file.OpenFile());
                     MemoryStream ms;
