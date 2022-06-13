@@ -40,9 +40,9 @@
                 <Label x:Name="lblWachtrij" Content="Wachtrij voor afspelen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
             </Grid>
             <Grid x:Name="grdSongPlayer" Height="90" Width="800" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,345,0,0">
-                <Label x:Name="lblHuidigePositie" Content="0:00:00" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
-                <Slider x:Name="sldSong" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Width="674" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left"/>
-                <Label x:Name="lblEindePositie" Content="0:00:00" HorizontalAlignment="Left" Margin="742,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
+                <Label x:Name="lblHuidigePositie" Content="00:00:00" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
+                <Slider x:Name="sldSong" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Width="662" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left"/>
+                <Label x:Name="lblEindePositie" Content="00:00:00" HorizontalAlignment="Left" Margin="736,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
                 <Label x:Name="lblSongName" Content="" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="14" Width="253" Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FlowDirection="LeftToRight"/>
                 <Button x:Name="btnShuffle" Content="Shuffle" HorizontalAlignment="Left" Margin="268,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnShuffle_Click"/>
                 <Button x:Name="btnPrevious" Content="Previous" HorizontalAlignment="Left" Margin="320,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnPrevious_Click"/>
