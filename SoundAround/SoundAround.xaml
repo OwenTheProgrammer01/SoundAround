@@ -49,6 +49,8 @@
                 <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,1" Padding="5,5,5,5" Height="26" Click="btnPause_Click"/>
                 <Button x:Name="btnNext" Content="Next" HorizontalAlignment="Left" Margin="425,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnNext_Click"/>
                 <Button x:Name="btnRepeat" Content="Repeat" HorizontalAlignment="Left" Margin="465,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnRepeat_Click"/>
+                <Label x:Name="lblVolume" Content="Volume: 100" HorizontalAlignment="Left" Margin="540,37,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
+                <Slider x:Name="sldVolume" HorizontalAlignment="Left" Margin="620,41,0,0" VerticalAlignment="Top" Width="170" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left" Maximum="100" Value="100"/>
             </Grid>
         </Grid>
     </Viewbox>

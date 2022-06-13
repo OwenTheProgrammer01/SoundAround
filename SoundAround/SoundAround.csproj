@@ -64,7 +64,6 @@
     <Compile Include="Bestandtype.cs" />
     <Compile Include="BestandtypeDA.cs" />
     <Compile Include="Genre.cs" />
-    <Compile Include="GenreDA.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="SongDA.cs" />
     <Page Include="SoundAround.xaml">

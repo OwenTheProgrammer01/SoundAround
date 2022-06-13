@@ -26,6 +26,7 @@ namespace SoundAround
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
         List<Genre> Genres = new List<Genre>();
         List<Song> Songs = new List<Song>();
+        List<Song> Wachtrij = new List<Song>();
 
         //variabelen aanmaken
         string menu = "start";
@@ -36,7 +37,7 @@ namespace SoundAround
         bool shuffle = false;
         bool play = false;
         bool repeat = false;
-        double volume = 1;
+        double volume = 100;
 
         public soundaround()
         {
@@ -46,7 +47,7 @@ namespace SoundAround
             //mediaelement setup
             player.LoadedBehavior = MediaState.Manual;
             player.UnloadedBehavior = MediaState.Manual;
-            player.Volume = volume;
+            player.Volume = volume/100;
             player.Clock = null;
             player.MediaEnded += songEnd;
 
@@ -179,7 +180,7 @@ namespace SoundAround
         {
             try
             {
-                //lblEindePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.NaturalDuration));
+                lblEindePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.NaturalDuration));
             }
             catch (Exception error)
             {
@@ -191,7 +192,7 @@ namespace SoundAround
         {
             try
             {
-                //lblHuidigePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.Position));
+                lblHuidigePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.Position));
             }
             catch (Exception error)
             {
@@ -201,12 +202,26 @@ namespace SoundAround
 
         private void removeText(object sender, RoutedEventArgs e)
         {
-            txbZoeken.Text = txbZoeken.Text.Replace("Zoeken", "");
+            try
+            {
+                txbZoeken.Text = txbZoeken.Text.Replace("Zoeken", "");
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void addText(object sender, RoutedEventArgs e)
         {
-            txbZoeken.Text = "Zoeken";
+            try
+            {
+                txbZoeken.Text = "Zoeken";
+            }
+            catch (Exception error)
+            {
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void btnZoeken_Click(object sender, RoutedEventArgs e)
@@ -494,11 +509,13 @@ namespace SoundAround
         {
             try
             {
+                //herhalen
                 if (!repeat)
                 {
                     repeat = true;
                     btnRepeat.BorderThickness = new Thickness(0, 0, 0, 1);
                 }
+                //niet herhalen
                 else
                 {
                     repeat = false;
@@ -529,32 +546,42 @@ namespace SoundAround
 
         public void playSong()
         {
-            player.Stop();
-            for (int i = 0; i < Bestandtypen.Count; i++)
+            try
             {
-                if (Songs[currentSong].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                player.Stop();
+                for (int i = 0; i < Bestandtypen.Count; i++)
                 {
-                    currentType = i;
+                    if (Songs[currentSong].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                    {
+                        currentType = i;
+                    }
                 }
+                MemoryStream ms = new MemoryStream(Songs[currentSong].Bestand);
+                string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam}{Bestandtypen[currentType].bestandtype}";
+                File.WriteAllBytes(filepath, ms.ToArray());
+                player.Source = new Uri(filepath);
+                songLength();
+                player.Play();
+                play = true;
+                btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
             }
-            MemoryStream ms = new MemoryStream(Songs[currentSong].Bestand);
-            string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam}{Bestandtypen[currentType].bestandtype}";
-            File.WriteAllBytes(filepath, ms.ToArray());
-            player.Source = new Uri(filepath);
-            songLength();
-            player.Play();
-            play = true;
-            btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
+            catch (Exception error)
+            {
+                //foutmelding
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void songEnd(object sender, RoutedEventArgs e)
         {
             try
             {
+                //herhaal
                 if (repeat)
                 {
                     player.Position = TimeSpan.FromSeconds(0);
                 }
+                //volgend nummer
                 else
                 {
                     btnNext_Click(sender, e);
@@ -562,6 +589,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
