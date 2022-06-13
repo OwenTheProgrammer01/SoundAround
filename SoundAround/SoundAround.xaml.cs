@@ -407,9 +407,9 @@ namespace SoundAround
             try
             {
                 //ga naar het laatste item
-                if (currentSong <= 0)
+                if (currentSong == 0)
                 {
-                    currentSong = Songs.Count - 1;
+                    currentSong = Songs.Count;
                 }
                 //vorige liedje
                 else
@@ -432,11 +432,10 @@ namespace SoundAround
                 //play
                 if (!play)
                 {
-                    if (currentSong <= 0)
+                    if (currentSong <= -1)
                     {
-                        currentSong = 1;
+                        currentSong = 0;
                         playSong();
-                        play = true;
                         btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
                         return;
                     }
@@ -463,7 +462,7 @@ namespace SoundAround
             try
             {
                 //begin opnieuw
-                if (currentSong >= Songs.Count - 1)
+                if (currentSong == Songs.Count)
                 {
                     currentSong = 0;
                 }
@@ -507,7 +506,7 @@ namespace SoundAround
         {
             try
             {
-                if (lsbBestanden.SelectedIndex != -1)
+                if (lsbBestanden.SelectedIndex != -1 && menu == "muziekbibliotheek" && tablad == "nummers")
                 {
                     currentSong = lsbBestanden.SelectedIndex;
                     playSong();
@@ -521,9 +520,7 @@ namespace SoundAround
 
         public void playSong()
         {
-            songLength();
             player.Stop();
-            MemoryStream ms = new MemoryStream(Songs[currentSong].Bestand);
             for (int i = 0; i < Bestandtypen.Count; i++)
             {
                 if (Songs[currentSong].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
@@ -531,9 +528,11 @@ namespace SoundAround
                     currentType = i;
                 }
             }
+            MemoryStream ms = new MemoryStream(Songs[currentSong].Bestand);
             string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam}{Bestandtypen[currentType].bestandtype}";
             File.WriteAllBytes(filepath, ms.ToArray());
             player.Source = new Uri(filepath);
+            songLength();
             player.Play();
             play = true;
         }
