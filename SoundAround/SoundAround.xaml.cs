@@ -380,16 +380,10 @@ namespace SoundAround
                     song.Naam = Path.GetFileNameWithoutExtension(file.FileName);
                     song.Duur = duurChecker.NaturalDuration.ToString();
 
-                    if (SongDA.Toevoegen(song))
+                    if (!SongDA.Toevoegen(song))
                     {
-                        error = "Song upload gelukt";
+                        MessageBox.Show("Song upload gefaald");
                     }
-                    else
-                    {
-                        error = "Song upload gefaald";
-                    }
-
-                    MessageBox.Show(error);
 
                     DatabaseOphalen();
                 }
