@@ -42,7 +42,7 @@
             </Grid>
             <Grid x:Name="grdSongPlayer" Height="90" Width="800" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,345,0,0">
                 <Label x:Name="lblHuidigePositie" Content="00:00:00" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
-                <Slider x:Name="sldSong" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Width="662" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left"/>
+                <Slider x:Name="sldSong" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Width="662" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left" SmallChange="1"/>
                 <Label x:Name="lblEindePositie" Content="00:00:00" HorizontalAlignment="Left" Margin="736,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
                 <Label x:Name="lblSongName" Content="" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="14" Width="253" Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FlowDirection="LeftToRight"/>
                 <Button x:Name="btnShuffle" Content="Shuffle" HorizontalAlignment="Left" Margin="268,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnShuffle_Click"/>
@@ -51,7 +51,7 @@
                 <Button x:Name="btnNext" Content="Next" HorizontalAlignment="Left" Margin="425,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnNext_Click"/>
                 <Button x:Name="btnRepeat" Content="Repeat" HorizontalAlignment="Left" Margin="465,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnRepeat_Click"/>
                 <Label x:Name="lblVolume" Content="Volume: 100%" HorizontalAlignment="Left" Margin="530,37,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
-                <Slider x:Name="sldVolume" HorizontalAlignment="Left" Margin="620,41,0,0" VerticalAlignment="Top" Width="170" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left" Maximum="100" Value="100" ValueChanged="sldVolume_ValueChanged"/>
+                <Slider x:Name="sldVolume" HorizontalAlignment="Left" Margin="620,41,0,0" VerticalAlignment="Top" Width="170" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left" Maximum="100" Value="100" ValueChanged="sldVolume_ValueChanged" SmallChange="1" TickFrequency="-1"/>
             </Grid>
         </Grid>
     </Viewbox>

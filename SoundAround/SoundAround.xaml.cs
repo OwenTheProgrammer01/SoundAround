@@ -592,7 +592,7 @@ namespace SoundAround
 
         private void sldVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            volume = sldVolume.Value;
+            volume = Math.Round(sldVolume.Value, 0);
             lblVolume.Content = $"Volume: {volume}%";
             player.Volume = volume/100;
         }
