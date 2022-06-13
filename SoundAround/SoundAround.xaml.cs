@@ -174,23 +174,12 @@ namespace SoundAround
             }
         }
 
-        private void songLength()
-        {
-            try
-            {
-                lblEindePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.NaturalDuration));
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message);
-            }
-        }
-
         private void songPosition(object sender, EventArgs e)
         {
             try
             {
-                lblHuidigePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.Position));
+                lblHuidigePositie.Content = DateTime.Parse(player.Position.TotalSeconds.ToString()).ToString("HH:mm:ss");
+                sldSong.Value = player.Position.TotalSeconds;
             }
             catch (Exception error)
             {
@@ -334,8 +323,6 @@ namespace SoundAround
         {
             try
             {
-                string error;
-
                 OpenFileDialog file = new OpenFileDialog();
                 file.DefaultExt = "mp3";
                 file.Filter = "mp3 files (*.mp3)|*.mp3|WAV files (*.wav)|*.wav";
@@ -551,7 +538,8 @@ namespace SoundAround
                 string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam}{Bestandtypen[currentType].bestandtype}";
                 File.WriteAllBytes(filepath, ms.ToArray());
                 player.Source = new Uri(filepath);
-                songLength();
+                sldSong.Maximum = Convert.ToDouble(player.NaturalDuration.ToString());
+                lblEindePositie.Content = DateTime.Parse(player.NaturalDuration.ToString()).ToString("HH:mm:ss");
                 player.Play();
                 play = true;
                 btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
@@ -583,6 +571,11 @@ namespace SoundAround
                 //foutmelding
                 MessageBox.Show(error.Message);
             }
+        }
+
+        private void sldSong_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
         }
     }
 }
