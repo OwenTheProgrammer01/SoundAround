@@ -31,8 +31,8 @@ namespace SoundAround
         string menu = "start";
         string tablad = "nummers";
         string zoekopdracht = "";
-        int currentSong = 0;
-        int currentType = 0;
+        int currentSong = -1;
+        int currentType = -1;
         bool shuffle = false;
         bool play = false;
         bool repeat = false;
@@ -383,12 +383,13 @@ namespace SoundAround
         {
             try
             {
-                //shuffle
+                //shuffle aan
                 if (!shuffle)
                 {
                     btnShuffle.BorderThickness = new Thickness(0, 0, 0, 1);
                     shuffle = true;
                 }
+                //shuffle uit
                 else
                 {
                     btnShuffle.BorderThickness = new Thickness(0, 0, 0, 0);
@@ -408,7 +409,7 @@ namespace SoundAround
                 //ga naar het laatste item
                 if (currentSong <= 0)
                 {
-                    currentSong = Songs.Count;
+                    currentSong = Songs.Count - 1;
                 }
                 //vorige liedje
                 else
@@ -431,6 +432,14 @@ namespace SoundAround
                 //play
                 if (!play)
                 {
+                    if (currentSong <= 0)
+                    {
+                        currentSong = 1;
+                        playSong();
+                        play = true;
+                        btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
+                        return;
+                    }
                     player.Play();
                     play = true;
                     btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
