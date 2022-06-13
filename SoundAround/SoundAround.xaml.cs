@@ -36,7 +36,7 @@ namespace SoundAround
         bool shuffle = false;
         bool play = false;
         bool repeat = false;
-        double volume = 0.1;
+        double volume = 1;
 
         public soundaround()
         {
@@ -348,6 +348,7 @@ namespace SoundAround
                         }
                     }
 
+                    song.Bestandtype_ID = bestandtype.Bestandtype_ID;
                     BestandtypeDA.Toevoegen(bestandtype);
 
                 skip:
@@ -409,7 +410,7 @@ namespace SoundAround
                 //ga naar het laatste item
                 if (currentSong == 0)
                 {
-                    currentSong = Songs.Count;
+                    currentSong = Songs.Count - 1;
                 }
                 //vorige liedje
                 else
@@ -432,7 +433,7 @@ namespace SoundAround
                 //play
                 if (!play)
                 {
-                    if (currentSong <= -1)
+                    if (currentSong == -1)
                     {
                         currentSong = 0;
                         playSong();
@@ -462,7 +463,7 @@ namespace SoundAround
             try
             {
                 //begin opnieuw
-                if (currentSong == Songs.Count)
+                if (currentSong >= Songs.Count - 1)
                 {
                     currentSong = 0;
                 }
@@ -535,18 +536,26 @@ namespace SoundAround
             songLength();
             player.Play();
             play = true;
+            btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
         }
 
         private void songEnd(object sender, RoutedEventArgs e)
         {
-            if (repeat)
+            try
             {
-                player.Position = TimeSpan.FromSeconds(0);
+                if (repeat)
+                {
+                    player.Position = TimeSpan.FromSeconds(0);
+                }
+                else
+                {
+                    currentSong++;
+                    playSong();
+                }
             }
-            else
+            catch (Exception error)
             {
-                currentSong++;
-                playSong();
+                MessageBox.Show(error.Message);
             }
         }
     }
