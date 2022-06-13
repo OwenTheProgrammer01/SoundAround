@@ -348,10 +348,18 @@ namespace SoundAround
                         }
                     }
 
-                    song.Bestandtype_ID = bestandtype.Bestandtype_ID;
                     BestandtypeDA.Toevoegen(bestandtype);
+                    Bestandtypen = BestandtypeDA.Ophalen();
 
-                skip:
+                    foreach (Bestandtype _bestandtype in Bestandtypen)
+                    {
+                        if (_bestandtype.bestandtype == bestandtype.bestandtype)
+                        {
+                            song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
+                        }
+                    }
+
+                    skip:
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
@@ -549,8 +557,7 @@ namespace SoundAround
                 }
                 else
                 {
-                    currentSong++;
-                    playSong();
+                    btnNext_Click(sender, e);
                 }
             }
             catch (Exception error)
