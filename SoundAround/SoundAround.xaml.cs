@@ -13,12 +13,8 @@ namespace SoundAround
     /// </summary>
     public partial class soundaround : Window
     {
-        //soundplayer aanmaken
+        //Mediaelement aanmaken
         MediaElement player = new MediaElement();
-        MediaElement duurChecker = new MediaElement();
-
-        //timer aanmaken
-        DispatcherTimer timer = new DispatcherTimer();
 
         //lijsten aanmaken
         List<Album> Albums = new List<Album>();
@@ -36,6 +32,7 @@ namespace SoundAround
         bool shuffle = false;
         bool play = false;
         bool repeat = false;
+        bool isDragging = false;
         double volume = 100;
 
         public soundaround()
@@ -49,10 +46,6 @@ namespace SoundAround
             player.Volume = volume/100;
             player.Clock = null;
             player.MediaEnded += songEnd;
-
-            //timer setup
-            timer.Interval = TimeSpan.FromMilliseconds(500);
-            timer.Tick += songPosition;
 
             //zoek textbox setup
             txbZoeken.GotFocus += removeText;
@@ -174,19 +167,6 @@ namespace SoundAround
             }
         }
 
-        private void songPosition(object sender, EventArgs e)
-        {
-            try
-            {
-                lblHuidigePositie.Content = DateTime.Parse(player.Position.TotalSeconds.ToString()).ToString("HH:mm:ss");
-                sldSong.Value = player.Position.TotalSeconds;
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message);
-            }
-        }
-
         private void removeText(object sender, RoutedEventArgs e)
         {
             try
@@ -215,7 +195,7 @@ namespace SoundAround
         {
             try
             {
-
+                
             }
             catch (Exception error)
             {
@@ -334,7 +314,6 @@ namespace SoundAround
                     Artiest artiest = new Artiest();
                     Album album = new Album();
                     BinaryReader br = new BinaryReader(file.OpenFile());
-                    MemoryStream ms;
 
                     bestandtype.bestandtype = Path.GetExtension(file.FileName);
 
@@ -363,9 +342,12 @@ namespace SoundAround
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
                     song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
-                    ms = new MemoryStream(song.Bestand);
                     song.Naam = Path.GetFileNameWithoutExtension(file.FileName);
-                    song.Duur = duurChecker.NaturalDuration.ToString();
+                    MemoryStream ms = new MemoryStream(song.Bestand);
+                    string filepath = $@"C:\Users\{Environment.UserName}\Music\{song.Naam} SoundAround{bestandtype.bestandtype}";
+                    File.WriteAllBytes(filepath, ms.ToArray());
+                    player.Source = new Uri(filepath);
+                    song.Duur = "00:00:00";
 
                     if (!SongDA.Toevoegen(song))
                     {
@@ -535,11 +517,12 @@ namespace SoundAround
                     }
                 }
                 MemoryStream ms = new MemoryStream(Songs[currentSong].Bestand);
-                string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam}{Bestandtypen[currentType].bestandtype}";
+                string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
                 File.WriteAllBytes(filepath, ms.ToArray());
-                player.Source = new Uri(filepath);
-                sldSong.Maximum = Convert.ToDouble(player.NaturalDuration.ToString());
-                lblEindePositie.Content = DateTime.Parse(player.NaturalDuration.ToString()).ToString("HH:mm:ss");
+                if (player.Source != new Uri(filepath))
+                {
+                    player.Source = new Uri(filepath);
+                }
                 player.Play();
                 play = true;
                 btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
@@ -571,11 +554,6 @@ namespace SoundAround
                 //foutmelding
                 MessageBox.Show(error.Message);
             }
-        }
-
-        private void sldSong_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-
         }
     }
 }
