@@ -65,12 +65,12 @@ namespace SoundAround
             }
         }
 
-        public static bool Delete(int Bestandtype_ID)
+        public static bool Delete(Bestandtype Bestandtype)
         {
             try
             {
                 string sql = "DELETE FROM Bestandtype WHERE Bestandtype_ID=@Bestandtype_ID";
-                SqlParameter ParBestandtype_ID = new SqlParameter("@Bestandtype_ID", Bestandtype_ID);
+                SqlParameter ParBestandtype_ID = new SqlParameter("@Bestandtype_ID", Bestandtype.Bestandtype_ID);
                 Database.ExcecuteSQL(sql, ParBestandtype_ID);
                 return true;
             }

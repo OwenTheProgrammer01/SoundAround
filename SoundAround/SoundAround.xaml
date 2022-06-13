@@ -34,14 +34,15 @@
                 <Button x:Name="btnNummers" Content="Nummers" HorizontalAlignment="Left" Margin="82,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,1" Padding="5,5,5,5" Height="26" Click="btnNummers_Click"/>
                 <Button x:Name="btnAlbums" Content="Albums" HorizontalAlignment="Left" Margin="149,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Click="btnAlbums_Click"/>
                 <Button x:Name="btnArtiesten" Content="Artiesten" HorizontalAlignment="Left" Margin="204,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Click="btnArtiesten_Click"/>
-                <Button x:Name="btnNummersToevoegen" Content="Nummer toevoegen" HorizontalAlignment="Left" Margin="523,10,0,0" VerticalAlignment="Top" Background="#FF343434" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="34" Click="btnNummersToevoegen_Click"/>
+                <Button x:Name="btnNummerToevoegen" Content="Nummer toevoegen" HorizontalAlignment="Left" Margin="397,10,0,0" VerticalAlignment="Top" Background="#FF343434" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="34" Click="btnNummerToevoegen_Click"/>
+                <Button x:Name="btnNummerVerwijderen" Content="Nummer verwijderen" HorizontalAlignment="Left" Margin="519,10,0,0" VerticalAlignment="Top" Background="#FF343434" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="34" Click="btnNummerVerwijderen_Click"/>
             </Grid>
             <Grid x:Name="grdWachtrij" Height="340" Width="650" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblWachtrij" Content="Wachtrij voor afspelen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
             </Grid>
             <Grid x:Name="grdSongPlayer" Height="90" Width="800" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,345,0,0">
                 <Label x:Name="lblHuidigePositie" Content="00:00:00" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
-                <Slider x:Name="sldSong" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Width="662" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left" Thumb.DragStarted="sldSong_DragStarted" Thumb.DragCompleted="sldSong_DragCompleted" TickFrequency="0"/>
+                <Slider x:Name="sldSong" HorizontalAlignment="Center" Margin="0,14,0,0" VerticalAlignment="Top" Width="662" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left"/>
                 <Label x:Name="lblEindePositie" Content="00:00:00" HorizontalAlignment="Left" Margin="736,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
                 <Label x:Name="lblSongName" Content="" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="14" Width="253" Height="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" FlowDirection="LeftToRight"/>
                 <Button x:Name="btnShuffle" Content="Shuffle" HorizontalAlignment="Left" Margin="268,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnShuffle_Click"/>
@@ -49,8 +50,8 @@
                 <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,1" Padding="5,5,5,5" Height="26" Click="btnPause_Click"/>
                 <Button x:Name="btnNext" Content="Next" HorizontalAlignment="Left" Margin="425,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnNext_Click"/>
                 <Button x:Name="btnRepeat" Content="Repeat" HorizontalAlignment="Left" Margin="465,45,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="26" Click="btnRepeat_Click"/>
-                <Label x:Name="lblVolume" Content="Volume: 100" HorizontalAlignment="Left" Margin="540,37,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
-                <Slider x:Name="sldVolume" HorizontalAlignment="Left" Margin="620,41,0,0" VerticalAlignment="Top" Width="170" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left" Maximum="100" Value="100"/>
+                <Label x:Name="lblVolume" Content="Volume: 100%" HorizontalAlignment="Left" Margin="530,37,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
+                <Slider x:Name="sldVolume" HorizontalAlignment="Left" Margin="620,41,0,0" VerticalAlignment="Top" Width="170" Foreground="{x:Null}" BorderBrush="#00000000" TickPlacement="None" HorizontalContentAlignment="Left" Maximum="100" Value="100" ValueChanged="sldVolume_ValueChanged"/>
             </Grid>
         </Grid>
     </Viewbox>
