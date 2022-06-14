@@ -11,7 +11,6 @@
             <Rectangle x:Name="rctBackgroundGrid1" HorizontalAlignment="Left" Height="340" Margin="0  ,0  ,0,0" VerticalAlignment="Top" Width="150" Fill="#FF202020" Stroke="Black" StrokeThickness="0.5"/>
             <Rectangle x:Name="rctBackgroundGrid2" HorizontalAlignment="Left" Height="340" Margin="150,0  ,0,0" VerticalAlignment="Top" Width="650" Fill="#FF272727" Stroke="Black" StrokeThickness="0.5"/>
             <Rectangle x:Name="rctBackgroundGrid3" HorizontalAlignment="Left" Height="95 " Margin="0  ,340,0,0" VerticalAlignment="Top" Width="800" Fill="#FF272727" Stroke="Black" StrokeThickness="0.5"/>
-            <ListBox x:Name="lsbBestanden" Margin="150,49,0,0" HorizontalAlignment="Left" Width="650" Height="291" VerticalAlignment="Top" Background="#FF272727" BorderBrush="{x:Null}" Foreground="White" SelectionChanged="lsbBestanden_SelectionChanged"/>
             <Grid x:Name="grdMenu" Height="340" Width="150" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0">
                 <TextBox x:Name="txbZoeken" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Foreground="#FFC9C9C9" Background="{x:Null}" BorderThickness="0,0,0,1" BorderBrush="#FF9A9A9A" Padding="5,0,0,0" UseLayoutRounding="False" AutomationProperties.IsColumnHeader="True" Text="Zoeken"/>
                 <Button x:Name="btnZoeken" Content="" HorizontalAlignment="Left" Margin="123,10,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="19" Height="17" Click="btnZoeken_Click">
@@ -27,6 +26,7 @@
             <Grid x:Name="grdStart" Height="340" Width="650" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblStart" Content="Start" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
                 <Label x:Name="lblRecenteMedia" Content="Recente media" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5"/>
+                <ListBox x:Name="lsbStart" Margin="0,49,0,0" HorizontalAlignment="Center" Width="650" Height="291" VerticalAlignment="Top" Background="#FF272727" BorderBrush="{x:Null}" Foreground="White"/>
                 <Label x:Name="lblComingSoon" Content="Coming soon!" HorizontalAlignment="Center" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" FontSize="72"/>
             </Grid>
             <Grid x:Name="grdMuziekbibliotheek" Height="340" Width="650" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
@@ -36,9 +36,11 @@
                 <Button x:Name="btnArtiesten" Content="Artiesten" HorizontalAlignment="Left" Margin="204,10,0,0" VerticalAlignment="Top" Background="{x:Null}" BorderBrush="White" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Click="btnArtiesten_Click"/>
                 <Button x:Name="btnNummerToevoegen" Content="Nummer toevoegen" HorizontalAlignment="Left" Margin="397,10,0,0" VerticalAlignment="Top" Background="#FF343434" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="34" Click="btnNummerToevoegen_Click"/>
                 <Button x:Name="btnNummerVerwijderen" Content="Nummer verwijderen" HorizontalAlignment="Left" Margin="519,10,0,0" VerticalAlignment="Top" Background="#FF343434" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0,0,0,0" Padding="5,5,5,5" Height="34" Click="btnNummerVerwijderen_Click"/>
+                <ListBox x:Name="lsbMuziekbibliotheek" Margin="0,49,0,0" HorizontalAlignment="Center" Width="650" Height="291" VerticalAlignment="Top" Background="#FF272727" BorderBrush="{x:Null}" Foreground="White" SelectionChanged="lsbMuziekbibliotheek_SelectionChanged"/>
             </Grid>
             <Grid x:Name="grdWachtrij" Height="340" Width="650" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,0,0,0">
                 <Label x:Name="lblWachtrij" Content="Wachtrij voor afspelen" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="18"/>
+                <ListBox x:Name="lsbWachtrij" Margin="0,49,0,0" HorizontalAlignment="Center" Width="650" Height="291" VerticalAlignment="Top" Background="#FF272727" BorderBrush="{x:Null}" Foreground="White" SelectionChanged="lsbWachtrij_SelectionChanged"/>
             </Grid>
             <Grid x:Name="grdSongPlayer" Height="90" Width="800" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,345,0,0">
                 <Label x:Name="lblHuidigePositie" Content="00:00:00" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White"/>
