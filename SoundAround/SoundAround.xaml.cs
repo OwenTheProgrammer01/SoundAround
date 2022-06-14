@@ -46,7 +46,6 @@ namespace SoundAround
         //variabelen aanmaken
         string menu = "start";
         string tablad = "nummers";
-        int currentSongIndex = -1;
         int currentType = -1;
         bool selection = true;
         bool shuffle = false;
@@ -472,18 +471,15 @@ namespace SoundAround
                 //ga naar het laatste item
                 if (lsbMuziekbibliotheek.SelectedIndex == 0)
                 {
-                    currentSong = Wachtrij[Wachtrij.Count - 1];
-                    lsbWachtrij.Items.Clear();
+                    lsbWachtrij.SelectedIndex = Wachtrij.Count - 1;
                 }
                 //vorige liedje
                 else
                 {
-                    currentSong = Wachtrij[lsbWachtrij.SelectedIndex - 1];
+                    lsbWachtrij.SelectedIndex--;
                 }
 
-                lsbWachtrij.Items.Insert(0, currentSong.Naam);
-                lsbWachtrij.SelectedItem = currentSong.Naam;
-
+                currentSong = Wachtrij[lsbWachtrij.SelectedIndex];
                 selection = true;
                 playSong();
             }
@@ -504,6 +500,7 @@ namespace SoundAround
                     if (lsbWachtrij.SelectedIndex == -1)
                     {
                         lsbWachtrij.SelectedIndex = 0;
+                        currentSong = Wachtrij[lsbWachtrij.SelectedIndex];
                         playSong();
                         btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
                         return;
@@ -533,17 +530,17 @@ namespace SoundAround
             {
                 selection = false;
                 //begin opnieuw
-                if (currentSongIndex == Wachtrij.Count - 1)
+                if (lsbWachtrij.SelectedIndex == Wachtrij.Count - 1)
                 {
-                    currentSongIndex = 0;
+                    lsbWachtrij.SelectedIndex = 0;
                 }
                 //volgend liedje
                 else
                 {
-                    currentSongIndex++;
+                    lsbWachtrij.SelectedIndex++;
                 }
 
-                lsbWachtrij.SelectedIndex = 1;
+                currentSong = Wachtrij[lsbWachtrij.SelectedIndex];
                 lsbWachtrij.Items.RemoveAt(0);
 
                 if (lsbWachtrij.Items.Count <= 0)
@@ -594,10 +591,10 @@ namespace SoundAround
         {
             try
             {
-                if (lsbMuziekbibliotheek.SelectedIndex != -1 || lsbMuziekbibliotheek.SelectedIndex != currentSongIndex && menu == "muziekbibliotheek" && tablad == "nummers" && selection)
+                if (lsbMuziekbibliotheek.SelectedIndex != -1 && menu == "muziekbibliotheek" && tablad == "nummers" && selection)
                 {
                     selection = false;
-                    currentSong = Muziekbibliotheek[currentSongIndex];
+                    currentSong = Muziekbibliotheek[lsbMuziekbibliotheek.SelectedIndex];
                     selection = true;
                     playSong();
                 }
@@ -617,14 +614,14 @@ namespace SoundAround
                 player.Stop();
                 for (int i = 0; i < Bestandtypen.Count; i++)
                 {
-                    if (Wachtrij[currentSongIndex].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                    if (currentSong.Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
                     {
                         currentType = i;
                     }
                 }
 
-                MemoryStream ms = new MemoryStream(Wachtrij[currentSongIndex].Bestand);
-                string filepath = $@"C:\Users\{Environment.UserName}\Music\{Wachtrij[currentSongIndex].Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
+                MemoryStream ms = new MemoryStream(Wachtrij[lsbWachtrij.SelectedIndex].Bestand);
+                string filepath = $@"C:\Users\{Environment.UserName}\Music\{currentSong.Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
 
                 if (player.Source != new Uri(filepath))
                 {
@@ -703,10 +700,10 @@ namespace SoundAround
         {
             try
             {
-                if (lsbWachtrij.SelectedIndex != -1 || lsbWachtrij.SelectedIndex != currentSongIndex && menu == "wachtrij" && selection)
+                if (lsbWachtrij.SelectedIndex != -1 && menu == "wachtrij" && selection)
                 {
                     selection = false;
-                    currentSong = Wachtrij[currentSongIndex];
+                    currentSong = Wachtrij[lsbWachtrij.SelectedIndex];
                     selection = true;
                     playSong();
                 }
