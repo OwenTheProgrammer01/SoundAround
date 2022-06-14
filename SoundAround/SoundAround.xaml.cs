@@ -12,7 +12,7 @@ namespace SoundAround
         //random aanmaken
         private static Random random = new Random();
 
-        public static void Shuffle<T>(this IList<T> list)
+        public static void Shuffle<T>(this List<T> list)
         {
             int n = list.Count;
             while (n > 1)
@@ -103,7 +103,8 @@ namespace SoundAround
                 Albums = AlbumDA.Ophalen();
                 Artiesten = ArtiestDA.Ophalen();
                 Bestandtypen = BestandtypeDA.Ophalen();
-                Muziekbibliotheek = Wachtrij = SongDA.Ophalen();
+                Muziekbibliotheek = SongDA.Ophalen();
+                Wachtrij = SongDA.Ophalen();
 
                 //muziek lijst alfabetisch zetten
                 Muziekbibliotheek.Sort((x, y) => string.Compare(x.Naam, y.Naam));
