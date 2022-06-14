@@ -433,7 +433,6 @@ namespace SoundAround
                     shuffle = true;
 
                     //de lijst willekeurig maken
-                    Wachtrij = Songs;
                     Wachtrij.Shuffle();
                     Wachtrij.Remove(Songs[currentSong]);
                     Wachtrij.Insert(0, Songs[currentSong]);
