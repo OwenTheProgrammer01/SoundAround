@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
 using Microsoft.Win32;
 
 namespace SoundAround
@@ -13,30 +12,27 @@ namespace SoundAround
     /// </summary>
     public partial class soundaround : Window
     {
-        //soundplayer aanmaken
+        //Mediaelement aanmaken
         MediaElement player = new MediaElement();
-        MediaElement duurChecker = new MediaElement();
-
-        //timer aanmaken
-        DispatcherTimer timer = new DispatcherTimer();
 
         //lijsten aanmaken
         List<Album> Albums = new List<Album>();
         List<Artiest> Artiesten = new List<Artiest>();
         List<Bestandtype> Bestandtypen = new List<Bestandtype>();
-        List<Genre> Genres = new List<Genre>();
         List<Song> Songs = new List<Song>();
+        List<Song> Wachtrij = new List<Song>();
 
         //variabelen aanmaken
         string menu = "start";
         string tablad = "nummers";
-        string zoekopdracht = "";
+        //string zoekopdracht = "";
         int currentSong = -1;
         int currentType = -1;
+        bool selection = true;
         bool shuffle = false;
         bool play = false;
         bool repeat = false;
-        double volume = 1;
+        double volume = 100;
 
         public soundaround()
         {
@@ -46,13 +42,9 @@ namespace SoundAround
             //mediaelement setup
             player.LoadedBehavior = MediaState.Manual;
             player.UnloadedBehavior = MediaState.Manual;
-            player.Volume = volume;
+            player.Volume = volume/100;
             player.Clock = null;
             player.MediaEnded += songEnd;
-
-            //timer setup
-            timer.Interval = TimeSpan.FromMilliseconds(500);
-            timer.Tick += songPosition;
 
             //zoek textbox setup
             txbZoeken.GotFocus += removeText;
@@ -67,12 +59,12 @@ namespace SoundAround
                 Albums = AlbumDA.Ophalen();
                 Artiesten = ArtiestDA.Ophalen();
                 Bestandtypen = BestandtypeDA.Ophalen();
-                Genres = GenreDA.Ophalen();
                 Songs = SongDA.Ophalen();
                 invullenGUI();
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -122,6 +114,7 @@ namespace SoundAround
                         foreach (Song song in Songs)
                         {
                             lsbBestanden.Items.Add(song.Naam);
+                            lsbBestanden.SelectedIndex = currentSong;
                         }
                     }
 
@@ -171,52 +164,46 @@ namespace SoundAround
             }
             catch (Exception error)
             {
-                MessageBox.Show(error.Message);
-            }
-        }
-
-        private void songLength()
-        {
-            try
-            {
-                //lblEindePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.NaturalDuration));
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message);
-            }
-        }
-
-        private void songPosition(object sender, EventArgs e)
-        {
-            try
-            {
-                //lblHuidigePositie.Content = TimeSpan.FromSeconds(Convert.ToDouble(player.Position));
-            }
-            catch (Exception error)
-            {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
 
         private void removeText(object sender, RoutedEventArgs e)
         {
-            txbZoeken.Text = txbZoeken.Text.Replace("Zoeken", "");
+            try
+            {
+                txbZoeken.Text = txbZoeken.Text.Replace("Zoeken", "");
+            }
+            catch (Exception error)
+            {
+                //foutmelding
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void addText(object sender, RoutedEventArgs e)
         {
-            txbZoeken.Text = "Zoeken";
+            try
+            {
+                txbZoeken.Text = "Zoeken";
+            }
+            catch (Exception error)
+            {
+                //foutmelding
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void btnZoeken_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-
+                
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -233,6 +220,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -249,6 +237,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -265,6 +254,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -281,6 +271,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -297,6 +288,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -313,16 +305,15 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
 
-        private void btnNummersToevoegen_Click(object sender, RoutedEventArgs e)
+        private void btnNummerToevoegen_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string error;
-
                 OpenFileDialog file = new OpenFileDialog();
                 file.DefaultExt = "mp3";
                 file.Filter = "mp3 files (*.mp3)|*.mp3|WAV files (*.wav)|*.wav";
@@ -332,10 +323,8 @@ namespace SoundAround
                     Song song = new Song();
                     Bestandtype bestandtype = new Bestandtype();
                     Artiest artiest = new Artiest();
-                    Genre genre = new Genre();
                     Album album = new Album();
                     BinaryReader br = new BinaryReader(file.OpenFile());
-                    MemoryStream ms;
 
                     bestandtype.bestandtype = Path.GetExtension(file.FileName);
 
@@ -364,26 +353,20 @@ namespace SoundAround
                     song.Genre_ID = 1;
                     song.Album_ID = 1;
                     song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
-                    ms = new MemoryStream(song.Bestand);
                     song.Naam = Path.GetFileNameWithoutExtension(file.FileName);
-                    song.Duur = duurChecker.NaturalDuration.ToString();
+                    song.Duur = "00:00:00";
 
-                    if (SongDA.Toevoegen(song))
+                    if (!SongDA.Toevoegen(song))
                     {
-                        error = "Song upload gelukt";
+                        MessageBox.Show("Song upload gefaald");
                     }
-                    else
-                    {
-                        error = "Song upload gefaald";
-                    }
-
-                    MessageBox.Show(error);
 
                     DatabaseOphalen();
                 }
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -407,6 +390,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -430,6 +414,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -462,6 +447,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -486,6 +472,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -494,11 +481,13 @@ namespace SoundAround
         {
             try
             {
+                //herhalen
                 if (!repeat)
                 {
                     repeat = true;
                     btnRepeat.BorderThickness = new Thickness(0, 0, 0, 1);
                 }
+                //niet herhalen
                 else
                 {
                     repeat = false;
@@ -507,6 +496,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
@@ -515,7 +505,7 @@ namespace SoundAround
         {
             try
             {
-                if (lsbBestanden.SelectedIndex != -1 && menu == "muziekbibliotheek" && tablad == "nummers")
+                if (lsbBestanden.SelectedIndex != -1 && menu == "muziekbibliotheek" && tablad == "nummers" && selection)
                 {
                     currentSong = lsbBestanden.SelectedIndex;
                     playSong();
@@ -523,38 +513,57 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
         }
 
         public void playSong()
         {
-            player.Stop();
-            for (int i = 0; i < Bestandtypen.Count; i++)
+            try
             {
-                if (Songs[currentSong].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                player.Stop();
+                for (int i = 0; i < Bestandtypen.Count; i++)
                 {
-                    currentType = i;
+                    if (Songs[currentSong].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                    {
+                        currentType = i;
+                    }
                 }
+                MemoryStream ms = new MemoryStream(Songs[currentSong].Bestand);
+                string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
+                if (player.Source != new Uri(filepath))
+                {
+                    File.WriteAllBytes(filepath, ms.ToArray());
+                    player.Source = new Uri(filepath);
+                }
+                if (lsbBestanden.SelectedIndex != currentSong)
+                {
+                    selection = false;
+                    lsbBestanden.SelectedIndex = currentSong;
+                    selection = true;
+                }
+                player.Play();
+                play = true;
+                btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
             }
-            MemoryStream ms = new MemoryStream(Songs[currentSong].Bestand);
-            string filepath = $@"C:\Users\{Environment.UserName}\Music\{Songs[currentSong].Naam}{Bestandtypen[currentType].bestandtype}";
-            File.WriteAllBytes(filepath, ms.ToArray());
-            player.Source = new Uri(filepath);
-            songLength();
-            player.Play();
-            play = true;
-            btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
+            catch (Exception error)
+            {
+                //foutmelding
+                MessageBox.Show(error.Message);
+            }
         }
 
         private void songEnd(object sender, RoutedEventArgs e)
         {
             try
             {
+                //herhaal
                 if (repeat)
                 {
                     player.Position = TimeSpan.FromSeconds(0);
                 }
+                //volgend nummer
                 else
                 {
                     btnNext_Click(sender, e);
@@ -562,8 +571,30 @@ namespace SoundAround
             }
             catch (Exception error)
             {
+                //foutmelding
                 MessageBox.Show(error.Message);
             }
+        }
+
+        private void btnNummerVerwijderen_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SongDA.Delete(Songs[currentSong]);
+                DatabaseOphalen();
+            }
+            catch (Exception error)
+            {
+                //foutmelding
+                MessageBox.Show(error.Message);
+            }
+        }
+
+        private void sldVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            volume = Math.Round(sldVolume.Value, 0);
+            lblVolume.Content = $"Volume: {volume}%";
+            player.Volume = volume/100;
         }
     }
 }

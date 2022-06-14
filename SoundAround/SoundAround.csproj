@@ -14,6 +14,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -38,6 +40,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,8 +66,6 @@
     <Compile Include="ArtiestDA.cs" />
     <Compile Include="Bestandtype.cs" />
     <Compile Include="BestandtypeDA.cs" />
-    <Compile Include="Genre.cs" />
-    <Compile Include="GenreDA.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="SongDA.cs" />
     <Page Include="SoundAround.xaml">

@@ -86,12 +86,12 @@ namespace SoundAround
             }
         }
 
-        public static bool Delete(int Song_ID)
+        public static bool Delete(Song song)
         {
             try
             {
                 string sql = "DELETE FROM Song WHERE Song_ID=@Song_ID";
-                SqlParameter ParSong_ID = new SqlParameter("@Song_ID", Song_ID);
+                SqlParameter ParSong_ID = new SqlParameter("@Song_ID", song.Song_ID);
                 Database.ExcecuteSQL(sql, ParSong_ID);
                 return true;
             }
