@@ -41,11 +41,12 @@ namespace SoundAround
         List<Song> Muziekbibliotheek = new List<Song>();
         List<Song> Wachtrij = new List<Song>();
 
+        Song currentSong = new Song();
+
         //variabelen aanmaken
         string menu = "start";
         string tablad = "nummers";
-        int currentSong = -1;
-        int currentWachtrij = -1;
+        int currentSongIndex = -1;
         int currentType = -1;
         bool selection = true;
         bool shuffle = false;
@@ -89,6 +90,7 @@ namespace SoundAround
         {
             try
             {
+                selection = false;
                 //de lijsten invullen met de database gegevens
                 Albums = AlbumDA.Ophalen();
                 Artiesten = ArtiestDA.Ophalen();
@@ -106,6 +108,7 @@ namespace SoundAround
                 {
                     Wachtrij.Sort((x, y) => string.Compare(x.Naam, y.Naam));
                 }
+                selection = true;
                 invullenGUI();
             }
             catch (Exception error)
@@ -162,8 +165,10 @@ namespace SoundAround
                         foreach (Song song in Muziekbibliotheek)
                         {
                             lsbMuziekbibliotheek.Items.Add(song.Naam);
-                            lsbMuziekbibliotheek.SelectedIndex = currentSong;
                         }
+
+                        currentSong = Muziekbibliotheek[lsbMuziekbibliotheek.SelectedIndex];
+                        lsbMuziekbibliotheek.SelectedItem = currentSong.Naam;
                     }
 
                     if (tablad.Equals("albums", StringComparison.CurrentCultureIgnoreCase))
@@ -213,9 +218,17 @@ namespace SoundAround
                     foreach (Song song in Wachtrij)
                     {
                         lsbWachtrij.Items.Add(song.Naam);
-                        lsbWachtrij.SelectedIndex = currentWachtrij;
                     }
+
+                    for (int i = 0; i < lsbMuziekbibliotheek.SelectedIndex; i++)
+                    {
+                        lsbWachtrij.Items.RemoveAt(0);
+                    }
+
+                    currentSong = Muziekbibliotheek[lsbMuziekbibliotheek.SelectedIndex];
+                    lsbWachtrij.SelectedItem = currentSong.Naam;
                 }
+
                 selection = true;
             }
             catch (Exception error)
@@ -423,6 +436,8 @@ namespace SoundAround
         {
             try
             {
+                currentSong = Muziekbibliotheek[0];
+
                 //shuffle aan
                 if (!shuffle)
                 {
@@ -431,9 +446,6 @@ namespace SoundAround
 
                     //de lijst willekeurig maken
                     Wachtrij.Shuffle();
-                    Wachtrij.Insert(0, Wachtrij[currentWachtrij]);
-                    Wachtrij.RemoveAt(currentWachtrij);
-                    currentWachtrij = 0;
                     invullenGUI();
                 }
                 //shuffle uit
@@ -456,26 +468,23 @@ namespace SoundAround
         {
             try
             {
+                selection = false;
                 //ga naar het laatste item
-                if (currentWachtrij == 0)
+                if (lsbMuziekbibliotheek.SelectedIndex == 0)
                 {
-                    currentWachtrij = Wachtrij.Count - 1;
+                    currentSong = Wachtrij[Wachtrij.Count - 1];
+                    lsbWachtrij.Items.Clear();
                 }
                 //vorige liedje
                 else
                 {
-                    currentWachtrij--;
+                    currentSong = Wachtrij[lsbWachtrij.SelectedIndex - 1];
                 }
 
-                selection = false;
-                lsbWachtrij.SelectedIndex = 0;
+                lsbWachtrij.Items.Insert(0, currentSong.Naam);
+                lsbWachtrij.SelectedItem = currentSong.Naam;
+
                 selection = true;
-
-                for (int i = 0; i < Wachtrij.Count; i++)
-                {
-                    lsbWachtrij.Items.Insert(0, Wachtrij[i]);
-                }
-
                 playSong();
             }
             catch (Exception error)
@@ -492,9 +501,9 @@ namespace SoundAround
                 //play
                 if (!play)
                 {
-                    if (currentWachtrij == -1)
+                    if (lsbWachtrij.SelectedIndex == -1)
                     {
-                        currentWachtrij = 0;
+                        lsbWachtrij.SelectedIndex = 0;
                         playSong();
                         btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
                         return;
@@ -522,20 +531,29 @@ namespace SoundAround
         {
             try
             {
+                selection = false;
                 //begin opnieuw
-                if (currentWachtrij >= Wachtrij.Count - 1)
+                if (currentSongIndex == Wachtrij.Count - 1)
                 {
-                    currentWachtrij = 0;
+                    currentSongIndex = 0;
                 }
                 //volgend liedje
                 else
                 {
-                    currentWachtrij++;
+                    currentSongIndex++;
                 }
 
+                lsbWachtrij.SelectedIndex = 1;
                 lsbWachtrij.Items.RemoveAt(0);
-                selection = false;
-                lsbWachtrij.SelectedIndex = 0;
+
+                if (lsbWachtrij.Items.Count <= 0)
+                {
+                    foreach (Song song in Wachtrij)
+                    {
+                        lsbWachtrij.Items.Add(song.Naam);
+                    }
+                }
+
                 selection = true;
 
                 //voer speelliedje uit
@@ -576,19 +594,10 @@ namespace SoundAround
         {
             try
             {
-                if (lsbMuziekbibliotheek.SelectedIndex != -1 || lsbMuziekbibliotheek.SelectedIndex != currentSong && menu == "muziekbibliotheek" && tablad == "nummers" && selection)
+                if (lsbMuziekbibliotheek.SelectedIndex != -1 || lsbMuziekbibliotheek.SelectedIndex != currentSongIndex && menu == "muziekbibliotheek" && tablad == "nummers" && selection)
                 {
-                    currentSong = lsbMuziekbibliotheek.SelectedIndex;
-                    for (int i = 0; i < Wachtrij.Count; i++)
-                    {
-                        if (Muziekbibliotheek[currentSong] == Wachtrij[i])
-                        {
-                            currentWachtrij = i;
-                        }
-                    }
-
                     selection = false;
-                    lsbWachtrij.SelectedIndex = currentWachtrij;
+                    currentSong = Muziekbibliotheek[currentSongIndex];
                     selection = true;
                     playSong();
                 }
@@ -604,17 +613,18 @@ namespace SoundAround
         {
             try
             {
+                selection = false;
                 player.Stop();
                 for (int i = 0; i < Bestandtypen.Count; i++)
                 {
-                    if (Wachtrij[currentWachtrij].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                    if (Wachtrij[currentSongIndex].Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
                     {
                         currentType = i;
                     }
                 }
 
-                MemoryStream ms = new MemoryStream(Wachtrij[currentWachtrij].Bestand);
-                string filepath = $@"C:\Users\{Environment.UserName}\Music\{Wachtrij[currentWachtrij].Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
+                MemoryStream ms = new MemoryStream(Wachtrij[currentSongIndex].Bestand);
+                string filepath = $@"C:\Users\{Environment.UserName}\Music\{Wachtrij[currentSongIndex].Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
 
                 if (player.Source != new Uri(filepath))
                 {
@@ -624,21 +634,18 @@ namespace SoundAround
 
                 if (tablad == "muziekbibliotheek" && lsbMuziekbibliotheek.SelectedItem != lsbWachtrij.SelectedItem)
                 {
-                    selection = false;
                     lsbWachtrij.SelectedItem = lsbMuziekbibliotheek.SelectedItem;
-                    selection = true;
                 }
 
                 if (tablad == "wachtrij" && lsbMuziekbibliotheek.SelectedItem != lsbWachtrij.SelectedItem)
                 {
-                    selection = false;
                     lsbMuziekbibliotheek.SelectedItem = lsbWachtrij.SelectedItem;
-                    selection = true;
                 }
 
                 player.Play();
                 play = true;
                 btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
+                selection = true;
             }
             catch (Exception error)
             {
@@ -673,7 +680,9 @@ namespace SoundAround
         {
             try
             {
-                SongDA.Delete(Muziekbibliotheek[currentSong]);
+                selection = false;
+                SongDA.Delete(currentSong);
+                selection = true;
                 DatabaseOphalen();
             }
             catch (Exception error)
@@ -694,19 +703,10 @@ namespace SoundAround
         {
             try
             {
-                if (lsbWachtrij.SelectedIndex != -1 || lsbWachtrij.SelectedIndex != currentWachtrij && menu == "wachtrij" && selection)
+                if (lsbWachtrij.SelectedIndex != -1 || lsbWachtrij.SelectedIndex != currentSongIndex && menu == "wachtrij" && selection)
                 {
-                    currentWachtrij = lsbWachtrij.SelectedIndex;
-                    for (int i = 0; i < Muziekbibliotheek.Count; i++)
-                    {
-                        if (Wachtrij[currentWachtrij] == Muziekbibliotheek[i])
-                        {
-                            currentSong = i;
-                        }
-                    }
-
                     selection = false;
-                    lsbMuziekbibliotheek.SelectedIndex = currentSong;
+                    currentSong = Wachtrij[currentSongIndex];
                     selection = true;
                     playSong();
                 }
