@@ -199,11 +199,6 @@ namespace SoundAround
 
                     //listbox leegmaken
                     lsbWachtrij.Items.Clear();
-                    
-                    if (shuffle)
-                    {
-                        Wachtrij.Shuffle();
-                    }
 
                     //listbox invullen
                     foreach (Song song in Wachtrij)
@@ -434,7 +429,7 @@ namespace SoundAround
 
                     //de lijst willekeurig maken
                     Wachtrij.Shuffle();
-                    Wachtrij.Remove(Songs[currentSong]);
+                    Wachtrij.Remove(Wachtrij[currentSong]);
                     Wachtrij.Insert(0, Songs[currentSong]);
                     invullenGUI();
                 }
@@ -686,8 +681,8 @@ namespace SoundAround
                         {
                             currentSong = i;
                         }
-                        playSong();
                     }
+                    playSong();
                 }
             }
             catch (Exception error)
