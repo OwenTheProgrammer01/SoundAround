@@ -42,9 +42,6 @@ namespace SoundAround
         List<Song> Songs = new List<Song>();
         List<Song> Wachtrij = new List<Song>();
 
-        //random aanmaken
-        Random random = new Random();
-
         //variabelen aanmaken
         string menu = "start";
         string tablad = "nummers";
