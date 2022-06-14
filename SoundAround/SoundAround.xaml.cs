@@ -410,7 +410,6 @@ namespace SoundAround
 
                     skip:
                     song.Artiest_ID = 1;
-                    song.Genre_ID = 1;
                     song.Album_ID = 1;
                     song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
                     song.Naam = Path.GetFileNameWithoutExtension(file.FileName);
