@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -47,6 +46,7 @@ namespace SoundAround
         string tablad = "nummers";
         //string zoekopdracht = "";
         int currentSong = -1;
+        int currentWachtrij = -1;
         int currentType = -1;
         bool selection = true;
         bool shuffle = false;
@@ -98,7 +98,15 @@ namespace SoundAround
 
                 //muziek lijst alfabetisch zetten
                 Songs.Sort((x, y) => string.Compare(x.Naam, y.Naam));
-                Wachtrij.Sort((x, y) => string.Compare(x.Naam, y.Naam));
+
+                if (shuffle)
+                {
+                    Wachtrij.Shuffle();
+                }
+                else
+                {
+                    Wachtrij.Sort((x, y) => string.Compare(x.Naam, y.Naam));
+                }
                 invullenGUI();
             }
             catch (Exception error)
@@ -153,7 +161,9 @@ namespace SoundAround
                         foreach (Song song in Songs)
                         {
                             lsbMuziekbibliotheek.Items.Add(song.Naam);
+                            selection = false;
                             lsbMuziekbibliotheek.SelectedIndex = currentSong;
+                            selection = true;
                         }
                     }
 
@@ -204,7 +214,9 @@ namespace SoundAround
                     foreach (Song song in Wachtrij)
                     {
                         lsbWachtrij.Items.Add(song.Naam);
-                        lsbWachtrij.SelectedIndex = currentSong;
+                        selection = false;
+                        lsbWachtrij.SelectedIndex = currentWachtrij;
+                        selection = true;
                     }
                 }
             }
@@ -675,13 +687,7 @@ namespace SoundAround
             {
                 if (lsbWachtrij.SelectedIndex != -1 || lsbWachtrij.SelectedIndex != currentSong && menu == "wachtrij" && selection)
                 {
-                    for (int i = 0; i < Songs.Count; i++)
-                    {
-                        if (lsbWachtrij.SelectedItem == Songs[i])
-                        {
-                            currentSong = i;
-                        }
-                    }
+                    currentWachtrij = lsbWachtrij.SelectedIndex;
                     playSong();
                 }
             }
