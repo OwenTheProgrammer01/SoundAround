@@ -398,14 +398,6 @@ namespace SoundAround
                     BestandtypeDA.Toevoegen(bestandtype);
                     Bestandtypen = BestandtypeDA.Ophalen();
 
-                    foreach (Bestandtype _bestandtype in Bestandtypen)
-                    {
-                        if (_bestandtype.bestandtype == bestandtype.bestandtype)
-                        {
-                            song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
-                        }
-                    }
-
                     skip:
                     song.Artiest_ID = 1;
                     song.Genre_ID = 1;
