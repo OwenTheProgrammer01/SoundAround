@@ -233,7 +233,8 @@ namespace SoundAround
                         lsbWachtrij.Items.Add(song.Naam);
                     }
                 }
-
+                lsbMuziekbibliotheek.SelectedItem = currentSong.Naam;
+                lsbWachtrij.SelectedItem = currentSong.Naam;
                 selection = true;
             }
             catch (Exception error)
@@ -612,7 +613,6 @@ namespace SoundAround
                     }
                 }
                 selection = true;
-
                 //voer speelliedje uit
                 playSong();
             }
