@@ -36,17 +36,31 @@ namespace SoundAround
 
         //lijsten aanmaken
         List<Album> Albums = new List<Album>();
-        List<Artiest> Artiesten = new List<Artiest>();
-        List<Bestandtype> Bestandtypen = new List<Bestandtype>();
+        List<Artist> Artists = new List<Artist>();
+        List<FileType> FileTypes = new List<FileType>();
         List<Song> Muziekbibliotheek = new List<Song>();
         List<Song> Wachtrij = new List<Song>();
 
         //klasses aanmaken
         Song currentSong = new Song();
 
+        enum Menu
+        {
+            Start,
+            Muziekbibliotheek,
+            Wachtrij
+        }
+
+        enum Tab
+        {
+            Nummers,
+            Albums,
+            Artiesten
+        }
+
         //variabelen aanmaken
-        string menu = "start";
-        string tablad = "nummers";
+        Menu menu = Menu.Start;
+        Tab tab = Tab.Nummers;
         string activeMenuSongPlayer = "start";
         int currentType = -1;
         bool selection = true;
@@ -67,18 +81,18 @@ namespace SoundAround
                 Directory.CreateDirectory(folder);
             }
 
-            //mediaelement setup
+            //media element setup
             player.LoadedBehavior = MediaState.Manual;
             player.UnloadedBehavior = MediaState.Manual;
             player.Volume = volume/100;
             player.Clock = null;
-            player.MediaEnded += songEnd;
+            player.MediaEnded += SongEnd;
 
             //zoek textbox setup
-            txbZoeken.GotFocus += removeText;
-            txbZoeken.LostFocus += addText;
+            txbZoeken.GotFocus += RemoveText;
+            txbZoeken.LostFocus += AddText;
 
-            this.Closed += deleteFiles;
+            this.Closed += DeleteFiles;
 
             if (btnShuffle.BorderThickness == new Thickness(0, 0, 0, 1))
             {
@@ -98,13 +112,13 @@ namespace SoundAround
                 selection = false;
                 //de lijsten invullen met de database gegevens
                 Albums = AlbumDA.Ophalen();
-                Artiesten = ArtiestDA.Ophalen();
-                Bestandtypen = BestandtypeDA.Ophalen();
+                Artists = ArtistDA.Ophalen();
+                FileTypes = FileTypeDA.Ophalen();
                 Muziekbibliotheek = SongDA.Ophalen();
                 Wachtrij = SongDA.Ophalen();
 
                 //muziek lijst alfabetisch zetten
-                Muziekbibliotheek.Sort((x, y) => string.Compare(x.Naam, y.Naam));
+                Muziekbibliotheek.Sort((x, y) => string.Compare(x.Name, y.Name));
 
                 if (shuffle)
                 {
@@ -112,10 +126,10 @@ namespace SoundAround
                 }
                 else
                 {
-                    Wachtrij.Sort((x, y) => string.Compare(x.Naam, y.Naam));
+                    Wachtrij.Sort((x, y) => string.Compare(x.Name, y.Name));
                 }
                 selection = true;
-                invullenGUI();
+                UpdateGUI();
             }
             catch (Exception error)
             {
@@ -124,117 +138,117 @@ namespace SoundAround
             }
         }
 
-        public void invullenGUI()
+        public void UpdateGUI()
         {
             try
             {
                 selection = false;
 
-                if (menu.Equals("start", StringComparison.CurrentCultureIgnoreCase))
+                switch (menu)
                 {
-                    //grid zichtbaar maken en de andere niet zichtbaar
-                    grdStart.Visibility = Visibility.Visible;
-                    grdMuziekbibliotheek.Visibility = Visibility.Hidden;
-                    grdWachtrij.Visibility = Visibility.Hidden;
+                    case Menu.Start:
+                        //grid zichtbaar maken en de andere niet zichtbaar
+                        grdStart.Visibility = Visibility.Visible;
+                        grdMuziekbibliotheek.Visibility = Visibility.Hidden;
+                        grdWachtrij.Visibility = Visibility.Hidden;
 
-                    //dikte van de rand veranderen
-                    btnStart.BorderThickness = new Thickness(0, 0, 0, 1);
-                    btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
-                    btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                    //listbox leegmaken
-                    lsbStart.Items.Clear();
-                }
-                else if (menu.Equals("muziekbibliotheek", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    //grid zichtbaar maken en de andere niet zichtbaar
-                    grdStart.Visibility = Visibility.Hidden;
-                    grdMuziekbibliotheek.Visibility = Visibility.Visible;
-                    grdWachtrij.Visibility = Visibility.Hidden;
-
-                    //dikte van de rand veranderen
-                    btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
-                    btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 1);
-                    btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                    //listbox leegmaken
-                    lsbMuziekbibliotheek.Items.Clear();
-
-                    if (tablad.Equals("nummers", StringComparison.CurrentCultureIgnoreCase))
-                    {
                         //dikte van de rand veranderen
-                        btnNummers.BorderThickness = new Thickness(0, 0, 0, 1);
-                        btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
+                        btnStart.BorderThickness = new Thickness(0, 0, 0, 1);
+                        btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
+                        btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
+
+                        //listbox leegmaken
+                        lsbStart.Items.Clear();
+                        break;
+                    case Menu.Muziekbibliotheek:
+                        //grid zichtbaar maken en de andere niet zichtbaar
+                        grdStart.Visibility = Visibility.Hidden;
+                        grdMuziekbibliotheek.Visibility = Visibility.Visible;
+                        grdWachtrij.Visibility = Visibility.Hidden;
+
+                        //dikte van de rand veranderen
+                        btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
+                        btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 1);
+                        btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
+
+                        //listbox leegmaken
+                        lsbMuziekbibliotheek.Items.Clear();
+
+                        if (tab == Tab.Nummers)
+                        {
+                            //dikte van de rand veranderen
+                            btnNummers.BorderThickness = new Thickness(0, 0, 0, 1);
+                            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
+                            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
+
+                            //listbox invullen
+                            foreach (Song song in Muziekbibliotheek)
+                            {
+                                lsbMuziekbibliotheek.Items.Add(song.Name);
+                            }
+
+                            if (activeMenuSongPlayer == "muziekbibliotheek")
+                            {
+                                lsbMuziekbibliotheek.SelectedItem = currentSong.Name;
+                            }
+                        }
+
+                        if (tab == Tab.Albums)
+                        {
+                            //dikte van de rand veranderen
+                            btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
+                            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 1);
+                            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
+
+                            //listbox invullen
+                            foreach (Album album in Albums)
+                            {
+                                lsbMuziekbibliotheek.Items.Add(album.album);
+                            }
+                        }
+
+                        if (tab == Tab.Artiesten)
+                        {
+                            //dikte van de rand veranderen
+                            btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
+                            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
+                            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 1);
+
+                            //listbox invullen
+                            foreach (Artist artiest in Artists)
+                            {
+                                lsbMuziekbibliotheek.Items.Add(artiest.artist);
+                            }
+                        }
+                        break;
+                    case Menu.Wachtrij:
+                        //grid zichtbaar maken en de andere niet zichtbaar
+                        grdStart.Visibility = Visibility.Hidden;
+                        grdMuziekbibliotheek.Visibility = Visibility.Hidden;
+                        grdWachtrij.Visibility = Visibility.Visible;
+
+                        //dikte van de rand veranderen
+                        btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
+                        btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
+                        btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 1);
+
+                        //listbox leegmaken
+                        lsbWachtrij.Items.Clear();
+
+                        if (activeMenuSongPlayer == "wachtrij")
+                        {
+                            lsbWachtrij.SelectedItem = currentSong.Name;
+                        }
 
                         //listbox invullen
-                        foreach (Song song in Muziekbibliotheek)
+                        foreach (Song song in Wachtrij)
                         {
-                            lsbMuziekbibliotheek.Items.Add(song.Naam);
+                            lsbWachtrij.Items.Add(song.Name);
                         }
-
-                        if (activeMenuSongPlayer == "muziekbibliotheek")
-                        {
-                            lsbMuziekbibliotheek.SelectedItem = currentSong.Naam;
-                        }
-                    }
-
-                    if (tablad.Equals("albums", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        //dikte van de rand veranderen
-                        btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnAlbums.BorderThickness = new Thickness(0, 0, 0, 1);
-                        btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                        //listbox invullen
-                        foreach (Album album in Albums)
-                        {
-                            lsbMuziekbibliotheek.Items.Add(album.album);
-                        }
-                    }
-
-                    if (tablad.Equals("artiesten", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        //dikte van de rand veranderen
-                        btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 1);
-
-                        //listbox invullen
-                        foreach (Artiest artiest in Artiesten)
-                        {
-                            lsbMuziekbibliotheek.Items.Add(artiest.artiest);
-                        }
-                    }
+                        break;
                 }
-                else if (menu.Equals("wachtrij", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    //grid zichtbaar maken en de andere niet zichtbaar
-                    grdStart.Visibility = Visibility.Hidden;
-                    grdMuziekbibliotheek.Visibility = Visibility.Hidden;
-                    grdWachtrij.Visibility = Visibility.Visible;
-
-                    //dikte van de rand veranderen
-                    btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
-                    btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
-                    btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 1);
-
-                    //listbox leegmaken
-                    lsbWachtrij.Items.Clear();
-
-                    if (activeMenuSongPlayer == "wachtrij")
-                    {
-                        lsbWachtrij.SelectedItem = currentSong.Naam;
-                    }
-
-                    //listbox invullen
-                    foreach (Song song in Wachtrij)
-                    {
-                        lsbWachtrij.Items.Add(song.Naam);
-                    }
-                }
-                lsbMuziekbibliotheek.SelectedItem = currentSong.Naam;
-                lsbWachtrij.SelectedItem = currentSong.Naam;
+                lsbMuziekbibliotheek.SelectedItem = currentSong.Name;
+                lsbWachtrij.SelectedItem = currentSong.Name;
                 selection = true;
             }
             catch (Exception error)
@@ -244,7 +258,7 @@ namespace SoundAround
             }
         }
 
-        private void removeText(object sender, RoutedEventArgs e)
+        private void RemoveText(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -257,7 +271,7 @@ namespace SoundAround
             }
         }
 
-        private void addText(object sender, RoutedEventArgs e)
+        private void AddText(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -270,21 +284,21 @@ namespace SoundAround
             }
         }
 
-        private void deleteFiles(object sender, EventArgs e)
+        private void DeleteFiles(object sender, EventArgs e)
         {
             try
             {
                 foreach (Song song in Muziekbibliotheek)
                 {
-                    for (int i = 0; i < Bestandtypen.Count; i++)
+                    for (int i = 0; i < FileTypes.Count; i++)
                     {
-                        if (song.Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                        if (song.FileType_ID == FileTypes[i].FileType_ID)
                         {
                             currentType = i;
                         }
                     }
 
-                    string filepath = $@"C:\Users\{Environment.UserName}\Music\SoundAround\{song.Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
+                    string filepath = $@"C:\Users\{Environment.UserName}\Music\SoundAround\{song.Name} SoundAround{FileTypes[currentType].filetype}";
                     File.Delete(filepath);
                 }
             }
@@ -312,10 +326,10 @@ namespace SoundAround
             try
             {
                 //menu gelijk zetten aan start
-                menu = "start";
+                menu = Menu.Start;
 
                 //gui invullen
-                invullenGUI();
+                UpdateGUI();
             }
             catch (Exception error)
             {
@@ -329,10 +343,10 @@ namespace SoundAround
             try
             {
                 //menu gelijk zetten aan start
-                menu = "muziekbibliotheek";
+                menu = Menu.Muziekbibliotheek;
 
                 //gui invullen
-                invullenGUI();
+                UpdateGUI();
             }
             catch (Exception error)
             {
@@ -346,10 +360,10 @@ namespace SoundAround
             try
             {
                 //menu gelijk zetten aan start
-                menu = "wachtrij";
+                menu = Menu.Wachtrij;
 
                 //gui invullen
-                invullenGUI();
+                UpdateGUI();
             }
             catch (Exception error)
             {
@@ -363,10 +377,10 @@ namespace SoundAround
             try
             {
                 //tablad gelijk zetten aan start
-                tablad = "nummers";
+                tab = Tab.Nummers;
 
                 //gui invullen
-                invullenGUI();
+                UpdateGUI();
             }
             catch (Exception error)
             {
@@ -380,10 +394,10 @@ namespace SoundAround
             try
             {
                 //tablad gelijk zetten aan start
-                tablad = "albums";
+                tab = Tab.Albums;
 
                 //gui invullen
-                invullenGUI();
+                UpdateGUI();
             }
             catch (Exception error)
             {
@@ -397,10 +411,10 @@ namespace SoundAround
             try
             {
                 //tablad gelijk zetten aan start
-                tablad = "artiesten";
+                tab = Tab.Artiesten;
 
                 //gui invullen
-                invullenGUI();
+                UpdateGUI();
             }
             catch (Exception error)
             {
@@ -413,46 +427,62 @@ namespace SoundAround
         {
             try
             {
-                OpenFileDialog file = new OpenFileDialog();
-                file.DefaultExt = "mp3";
-                file.Filter = "mp3 files (*.mp3)|*.mp3|WAV files (*.wav)|*.wav";
+                OpenFileDialog fileDialog = new OpenFileDialog();
+                fileDialog.DefaultExt = "mp3";
+                fileDialog.Filter = "mp3 files (*.mp3)|*.mp3|wav files (*.wav)|*.wav";
+                fileDialog.Multiselect = true;
+                fileDialog.Title = "Select a song";
 
-                if (file.ShowDialog() == true)
+                if (fileDialog.ShowDialog() == true)
                 {
                     Song song = new Song();
-                    Bestandtype bestandtype = new Bestandtype();
-                    Artiest artiest = new Artiest();
+                    FileType fileType = new FileType();
+                    Artist artiest = new Artist();
                     Album album = new Album();
-                    BinaryReader br = new BinaryReader(file.OpenFile());
 
-                    bestandtype.bestandtype = Path.GetExtension(file.FileName);
-
-                    foreach (Bestandtype _bestandtype in Bestandtypen)
+                    foreach (String file in fileDialog.FileNames)
                     {
-                        if (_bestandtype.bestandtype == bestandtype.bestandtype)
-                        {
-                            song.Bestandtype_ID = _bestandtype.Bestandtype_ID;
-                            goto skip;
-                        }
-                    }
+                        FileStream fs = File.Open(file, FileMode.Open);
+                        BinaryReader br = new BinaryReader(fs);
 
-                    BestandtypeDA.Toevoegen(bestandtype);
-                    Bestandtypen = BestandtypeDA.Ophalen();
+                        //fileType.filetype = Path.GetExtension(fileDialog.FileName);
+                        fileType.filetype = Path.GetExtension(file);
+
+                        foreach (FileType _bestandtype in FileTypes)
+                        {
+                            if (_bestandtype.filetype == fileType.filetype)
+                            {
+                                song.FileType_ID = _bestandtype.FileType_ID;
+                                goto skip;
+                            }
+                        }
+
+                        FileTypeDA.Toevoegen(fileType);
+                        FileTypes = FileTypeDA.Ophalen();
+
+                        foreach (FileType _bestandtype in FileTypes)
+                        {
+                            if (_bestandtype.filetype == fileType.filetype)
+                            {
+                                song.FileType_ID = _bestandtype.FileType_ID;
+                            }
+                        }
 
                     skip:
-                    song.Artiest_ID = 1;
-                    song.Album_ID = 1;
-                    song.Bestand = br.ReadBytes((int)file.OpenFile().Length);
-                    song.Naam = Path.GetFileNameWithoutExtension(file.FileName);
-                    song.Duur = "00:00:00";
+                        song.Artist_ID = 1;
+                        song.Album_ID = 1;
+                        song.SongFile = br.ReadBytes((int)fs.Length);
+                        song.Name = Path.GetFileNameWithoutExtension(fs.Name);
+                        song.Duration = "23:59:59";
 
-                    if (!SongDA.Toevoegen(song))
-                    {
-                        MessageBox.Show("Song upload gefaald");
+                        if (!SongDA.Toevoegen(song))
+                        {
+                            MessageBox.Show("Failed to upload the song");
+                        }
+
                     }
-
-                    DatabaseOphalen();
                 }
+                DatabaseOphalen();
             }
             catch (Exception error)
             {
@@ -473,15 +503,15 @@ namespace SoundAround
 
                     //de lijst willekeurig maken
                     Wachtrij.Shuffle();
-                    invullenGUI();
+                    UpdateGUI();
                 }
                 //shuffle uit
                 else
                 {
                     btnShuffle.BorderThickness = new Thickness(0, 0, 0, 0);
                     shuffle = false;
-                    Wachtrij.Sort((x, y) => string.Compare(x.Naam, y.Naam));
-                    invullenGUI();
+                    Wachtrij.Sort((x, y) => string.Compare(x.Name, y.Name));
+                    UpdateGUI();
                 }
             }
             catch (Exception error)
@@ -498,7 +528,7 @@ namespace SoundAround
                 selection = false;
                 if (activeMenuSongPlayer == "muziekbibliotheek")
                 {
-                    lsbMuziekbibliotheek.SelectedItem = currentSong.Naam;
+                    lsbMuziekbibliotheek.SelectedItem = currentSong.Name;
                     //ga naar laatste item
                     if (lsbMuziekbibliotheek.SelectedIndex == -1 || lsbMuziekbibliotheek.SelectedIndex == 0)
                     {
@@ -512,7 +542,7 @@ namespace SoundAround
                 }
                 if (activeMenuSongPlayer == "wachtrij")
                 {
-                    lsbWachtrij.SelectedItem = currentSong.Naam;
+                    lsbWachtrij.SelectedItem = currentSong.Name;
                     //ga naar laatste item
                     if (lsbWachtrij.SelectedIndex == -1 || lsbWachtrij.SelectedIndex == 0)
                     {
@@ -525,7 +555,7 @@ namespace SoundAround
                     }
                 }
                 selection = true;
-                playSong();
+                PlaySong();
             }
             catch (Exception error)
             {
@@ -543,7 +573,7 @@ namespace SoundAround
                 {
                     if (currentSong == null)
                     {
-                        if (menu == "muziekbibliotheek")
+                        if (menu == Menu.Muziekbibliotheek)
                         {
                             selection = false;
                             lsbMuziekbibliotheek.SelectedIndex = 0;
@@ -551,14 +581,14 @@ namespace SoundAround
                             currentSong = Muziekbibliotheek[lsbMuziekbibliotheek.SelectedIndex];
                         }
 
-                        if (menu == "wachtrij")
+                        if (menu == Menu.Wachtrij)
                         {
                             selection = false;
                             lsbWachtrij.SelectedIndex = 0;
                             selection = true;
                             currentSong = Wachtrij[lsbWachtrij.SelectedIndex];
                         }
-                        playSong();
+                        PlaySong();
                         btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
                         return;
                     }
@@ -614,7 +644,7 @@ namespace SoundAround
                 }
                 selection = true;
                 //voer speelliedje uit
-                playSong();
+                PlaySong();
             }
             catch (Exception error)
             {
@@ -651,10 +681,10 @@ namespace SoundAround
         {
             try
             {
-                if (lsbMuziekbibliotheek.SelectedIndex != -1 && tablad == "nummers" && selection)
+                if (lsbMuziekbibliotheek.SelectedIndex != -1 && tab == Tab.Nummers && selection)
                 {
                     activeMenuSongPlayer = "muziekbibliotheek";
-                    playSong();
+                    PlaySong();
                 }
             }
             catch (Exception error)
@@ -664,7 +694,7 @@ namespace SoundAround
             }
         }
 
-        public void playSong()
+        public void PlaySong()
         {
             try
             {
@@ -680,16 +710,16 @@ namespace SoundAround
 
                 selection = false;
                 player.Stop();
-                for (int i = 0; i < Bestandtypen.Count; i++)
+                for (int index = 0; index < FileTypes.Count; index++)
                 {
-                    if (currentSong.Bestandtype_ID == Bestandtypen[i].Bestandtype_ID)
+                    if (currentSong.FileType_ID == FileTypes[index].FileType_ID)
                     {
-                        currentType = i;
+                        currentType = index;
                     }
                 }
 
-                MemoryStream ms = new MemoryStream(currentSong.Bestand);
-                string filepath = $@"C:\Users\{Environment.UserName}\Music\SoundAround\{currentSong.Naam} SoundAround{Bestandtypen[currentType].bestandtype}";
+                MemoryStream ms = new MemoryStream(currentSong.SongFile);
+                string filepath = $@"C:\Users\{Environment.UserName}\Music\SoundAround\{currentSong.Name} SoundAround{FileTypes[currentType].filetype}";
 
                 if (player.Source != new Uri(filepath))
                 {
@@ -701,6 +731,8 @@ namespace SoundAround
                 play = true;
                 btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
                 selection = true;
+
+                lblSongName.Content = currentSong.Name;
             }
             catch (Exception error)
             {
@@ -709,7 +741,7 @@ namespace SoundAround
             }
         }
 
-        private void songEnd(object sender, RoutedEventArgs e)
+        private void SongEnd(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -761,7 +793,7 @@ namespace SoundAround
                 if (lsbWachtrij.SelectedIndex != -1 && selection)
                 {
                     activeMenuSongPlayer = "wachtrij";
-                    playSong();
+                    PlaySong();
                 }
             }
             catch (Exception error)

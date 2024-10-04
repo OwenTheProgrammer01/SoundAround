@@ -62,10 +62,10 @@
     </ApplicationDefinition>
     <Compile Include="Album.cs" />
     <Compile Include="AlbumDA.cs" />
-    <Compile Include="Artiest.cs" />
-    <Compile Include="ArtiestDA.cs" />
-    <Compile Include="Bestandtype.cs" />
-    <Compile Include="BestandtypeDA.cs" />
+    <Compile Include="Artist.cs" />
+    <Compile Include="ArtistDA.cs" />
+    <Compile Include="FileType.cs" />
+    <Compile Include="FileTypeDA.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="SongDA.cs" />
     <Page Include="SoundAround.xaml">
@@ -76,7 +76,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DatabaseConnectie.cs" />
+    <Compile Include="DatabaseConnection.cs" />
     <Compile Include="SoundAround.xaml.cs">
       <DependentUpon>SoundAround.xaml</DependentUpon>
       <SubType>Code</SubType>

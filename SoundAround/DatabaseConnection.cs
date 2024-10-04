@@ -1,5 +1,6 @@
 ﻿using System;
-//dit toevoegen aan de usings voor de database klasse
+
+// -- DATABASE CONNECTIE --
 using System.Data;
 using System.Data.SqlClient;
 
@@ -7,22 +8,16 @@ namespace SoundAround
 {
     class Database
     {
-
-        // -- DE FORM VOOR HET DE DATABASE AAN TE SPREKEN
         // -- VERSIE 1.0 --
-        // -- DATUM 03/01/2020 --
-        // -- Gregory Langedock --
-        // -- Guldensporencollege campus Engineering --
-        // -- Enumerations --
-        // -- Fields --
-        // -- Properties --
+        // -- DATUM 23/09/2024 --
+        // -- Owen Bal --
 
         private static String ConnectionString
         {
             get
             {
                 //het aanspreken van de database via de setting.setting interface.
-                string connectionString = "Server=OWENTHEPROGRAMM;Database=SoundAround;Trusted_Connection=Yes";
+                string connectionString = "Database=SoundAround;Trusted_Connection=Yes";
                 return connectionString;
             }
         }
@@ -33,7 +28,7 @@ namespace SoundAround
         }
 
         // -- methods --
-        // connectie maken met de database en ook de connectie sluiten.
+        // connectie maken met de database
         private static SqlConnection GetConnection()
         {
             //het verbinden met de database
