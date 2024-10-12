@@ -12,7 +12,7 @@
             <Rectangle x:Name="rctBackgroundGrid2" HorizontalAlignment="Left" Height="340" Margin="150,0  ,0,0" VerticalAlignment="Top" Width="650" Fill="#FF272727" Stroke="Black" StrokeThickness="0.5"/>
             <Rectangle x:Name="rctBackgroundGrid3" HorizontalAlignment="Left" Height="95 " Margin="0  ,340,0,0" VerticalAlignment="Top" Width="800" Fill="#FF272727" Stroke="Black" StrokeThickness="0.5"/>
             <Grid x:Name="grdMenu" Height="340" Width="150" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,0,0,0">
-                <TextBox x:Name="txbZoeken" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Foreground="#FFC9C9C9" Background="{x:Null}" BorderThickness="0,0,0,1" BorderBrush="#FF9A9A9A" Padding="5,0,0,0" UseLayoutRounding="False" AutomationProperties.IsColumnHeader="True" Text="Zoeken"/>
+                <TextBox x:Name="txbZoeken" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="132" Foreground="#FFC9C9C9" Background="{x:Null}" BorderThickness="0,0,0,1" BorderBrush="#FF9A9A9A" Padding="5,0,0,0" UseLayoutRounding="False" AutomationProperties.IsColumnHeader="True" Text="Zoeken" LostFocus="AddText" GotFocus="RemoveText"/>
                 <Button x:Name="btnZoeken" Content="" HorizontalAlignment="Left" Margin="123,10,0,0" VerticalAlignment="Top" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="19" Height="17" Click="btnZoeken_Click">
                     <Button.Background>
                         <ImageBrush ImageSource="/Resources/search-icon.png"/>
