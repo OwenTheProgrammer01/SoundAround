@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SoundAround.Properties {
+namespace soundaround.Properties {
     using System;
     
     

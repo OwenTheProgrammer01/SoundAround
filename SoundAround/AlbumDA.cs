@@ -8,7 +8,7 @@ namespace SoundAround
 {
     internal class AlbumDA
     {
-        public static List<Album> Ophalen()
+        public static List<Album> Fetch()
         {
             //het uitlezen van de database
             List<Album> Album = new List<Album>();
@@ -29,7 +29,7 @@ namespace SoundAround
             return Album;
         }
 
-        public static bool Toevoegen(Album Album)
+        public static bool Add(Album Album)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace SoundAround
             }
         }
 
-        public static bool Wijzigen(Album Album)
+        public static bool Modify(Album Album)
         {
             try
             {

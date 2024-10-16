@@ -16,7 +16,7 @@ namespace SoundAround
         {
             get
             {
-                //het aanspreken van de database via de setting.setting interface.
+                // connection string
                 string connectionString = "Database=SoundAround;Trusted_Connection=Yes";
                 return connectionString;
             }
@@ -28,17 +28,17 @@ namespace SoundAround
         }
 
         // -- methods --
-        // connectie maken met de database
+        // making a connection with the database
         private static SqlConnection GetConnection()
         {
-            //het verbinden met de database
+            // create a new connection
             SqlConnection oCon = new SqlConnection(ConnectionString);
-            //het openen van de connectie
+            // open the connection
             oCon.Open();
             return oCon;
         }
 
-        //de connectie sluiten en vrijgeven
+        // closing the connection
         private static void ReleaseConnection(SqlConnection oCon)
         {
             if (oCon != null)
@@ -48,7 +48,7 @@ namespace SoundAround
             }
         }
 
-        //Command maken op basis van bestaande connection, SQL en parameters.
+        // making a command based on the SQL and the parameters
         private static SqlCommand BuildCommand(SqlConnection oCon, string sSql, params SqlParameter[] dbParams)
         {
             SqlCommand oCommand = oCon.CreateCommand();
@@ -61,14 +61,14 @@ namespace SoundAround
             return oCommand;
         }
 
-        // een opdracht maken op basis van de SQL en de parameters
+        // making a command based on the SQL and the parameters
         private static SqlCommand BuildCommand(String sSql, params SqlParameter[] dbParams)
         {
             SqlConnection oCon = GetConnection();
             return BuildCommand(oCon, sSql, dbParams);
         }
 
-        //een data tabel ophalen uit de database
+        // getting a datatable from the database
         public static DataTable GetDT(String sSql, params SqlParameter[] dbParams)
         {
             SqlCommand oCommand = null;
@@ -94,7 +94,7 @@ namespace SoundAround
             }
         }
 
-        // een data lezer ophalen
+        // getting a datareader from the database
         public static SqlDataReader GetDR(string sSql, params SqlParameter[] dbParams)
         {
             SqlCommand oCommand = null;
@@ -118,7 +118,7 @@ namespace SoundAround
             }
         }
 
-        // een resultaat uit de database ophalen
+        // getting a scalar from the database
         public static Object executeScalar(string sSql, params SqlParameter[] dbParams)
         {
             SqlCommand oCommand = null;
@@ -141,7 +141,7 @@ namespace SoundAround
             }
         }
 
-        //het uitvoeren van update, delete en insert via onderstaande gegevens.
+        //  executing a non query
         public static void ExcecuteSQL(String sSQL, params SqlParameter[] dbParams)
         {
             SqlCommand oCommand = null;

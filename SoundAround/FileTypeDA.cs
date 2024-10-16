@@ -8,7 +8,7 @@ namespace SoundAround
 {
     internal class FileTypeDA
     {
-        public static List<FileType> Ophalen()
+        public static List<FileType> Fetch()
         {
             //het uitlezen van de database
             List<FileType> Bestandtype = new List<FileType>();
@@ -29,7 +29,7 @@ namespace SoundAround
             return Bestandtype;
         }
 
-        public static bool Toevoegen(FileType Bestandtype)
+        public static bool Add(FileType Bestandtype)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace SoundAround
             }
         }
 
-        public static bool Wijzigen(FileType Bestandtype)
+        public static bool Modify(FileType Bestandtype)
         {
             try
             {

@@ -11,7 +11,7 @@ namespace SoundAround
 {
     internal class SongDA
     {
-        public static List<Song> Ophalen()
+        public static List<Song> Fetch()
         {
             //het uitlezen van de database
             List<Song> Song = new List<Song>();
@@ -37,7 +37,7 @@ namespace SoundAround
             return Song;
         }
 
-        public static bool Toevoegen(Song song)
+        public static bool Add(Song song)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace SoundAround
             }
         }
 
-        public static bool Wijzigen(Song song)
+        public static bool Modify(Song song)
         {
             try
             {

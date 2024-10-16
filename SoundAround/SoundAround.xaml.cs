@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.Win32;
 
@@ -10,7 +12,7 @@ namespace SoundAround
 {
     static class ExtensionsClass
     {
-        private static Random random = new Random();
+        private static readonly Random random = new Random();
 
         public static void Shuffle<T>(this List<T> list)
         {
@@ -19,9 +21,7 @@ namespace SoundAround
             {
                 n--;
                 int k = random.Next(n + 1);
-                T tempValue = list[k];
-                list[k] = list[n];
-                list[n] = tempValue;
+                (list[n], list[k]) = (list[k], list[n]); // Tuple swap
             }
         }
     }
@@ -31,465 +31,332 @@ namespace SoundAround
     /// </summary>
     public partial class soundaround : Window
     {
-        // mediaelement aanmaken
-        MediaElement player = new MediaElement();
+        // MediaElement for playing the songs
+        private MediaElement player = new MediaElement();
 
-        // timer aanmaken
-        DispatcherTimer timer = new DispatcherTimer();
+        // MediaPlayer for playing the songs
+        private readonly MediaPlayer newPlayer = new MediaPlayer();
 
-        // lijsten aanmaken
-        List<Album> albums = new List<Album>();
-        List<Artist> artists = new List<Artist>();
-        List<FileType> fileTypes = new List<FileType>();
-        List<Song> musicLibrary = new List<Song>();
-        List<Song> queue = new List<Song>();
+        // DispatcherTimer for updating the UI (e.g., song position)
+        private readonly DispatcherTimer timer = new DispatcherTimer();
 
-        // klasses aanmaken
-        Song currentSong = new Song();
+        // List of albums, artists, etc.
+        private List<Album> albums = new List<Album>();
+        private List<Artist> artists = new List<Artist>();
+        private List<FileType> fileTypes = new List<FileType>();
+        private List<Song> musicLibrary = new List<Song>();
+        private List<Song> queue = new List<Song>();
 
-        enum Menu
-        {
-            Start,
-            Muziekbibliotheek,
-            Wachtrij
-        }
+        // currently playing song
+        private Song currentSong = new Song();
 
-        enum Tab
-        {
-            Nummers,
-            Albums,
-            Artiesten
-        }
+        private enum Menu { Start, MusicLibrary, Queue }
+        private enum Tab { Songs, Albums, Artists }
 
-        // variabelen aanmaken
-        Menu menu = Menu.Start;
-        Menu activePlaylist = Menu.Muziekbibliotheek;
-        Tab tab = Tab.Nummers;
-        int currentType = -1;
-        bool selectionChangeActive = true;
-        bool shuffle = false;
-        bool play = false;
-        bool repeat = false;
-        double volume = 100;
+        private Menu currentMenu = Menu.Start;
+        private Menu activePlaylist = Menu.MusicLibrary;
+        private Tab currentTab = Tab.Songs;
 
-        string folder = $@"C:\Users\{Environment.UserName}\Music\SoundAround";
+        private int currentType = -1;
+        private bool selectionChangeActive = true;
+        private bool shuffle = false;
+        private bool isPlaying = false;
+        private bool repeat = false;
+        private double volume = 100;
+        private readonly string folder = $@"C:\Users\{Environment.UserName}\Music\SoundAround";
 
         public soundaround()
         {
             InitializeComponent();
+            InitializeMediaPlayer();
+            InitializeTimer();
+            FetchDatabase();
 
-            DatabaseOphalen();
-
-            // folder aanmaken als deze nog niet bestaat
+            // create folder if it does not exist yet
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
 
-            // timer instellen
-            timer.Interval = TimeSpan.FromMilliseconds(10);
-            timer.Tick += new EventHandler(Update);
-            timer.Start();
+            if (btnShuffle.BorderThickness.Bottom == 1) shuffle = true;
+            if (btnRepeat.BorderThickness.Bottom == 1)repeat = true;
 
-            // mediaelement instellen
+            this.Closed += DeleteFilesOnClose;
+        }
+
+        private void InitializeMediaPlayer()
+        {
             player.LoadedBehavior = MediaState.Manual;
             player.UnloadedBehavior = MediaState.Manual;
             player.Volume = volume / 100;
-            player.Clock = null;
-            player.MediaEnded += SongEnded;
-
-            if (btnShuffle.BorderThickness == new Thickness(0, 0, 0, 1))
-            {
-                shuffle = true;
-            }
-
-            if (btnRepeat.BorderThickness == new Thickness(0, 0, 0, 1))
-            {
-                repeat = true;
-            }
-
-            this.Closed += DeleteFiles;
+            player.MediaEnded += OnSongEnded;
+        }
+        private void InitializeTimer()
+        {
+            timer.Interval = TimeSpan.FromMilliseconds(10);
+            timer.Tick += Update;
+            timer.Start();
         }
 
-        private void DatabaseOphalen()
+        private void FetchDatabase()
         {
             try
             {
-                //selectionChangeActive = false;
+                // fetch the data from the database
+                albums = AlbumDA.Fetch();
+                artists = ArtistDA.Fetch();
+                fileTypes = FileTypeDA.Fetch();
+                musicLibrary = SongDA.Fetch();
+                queue = SongDA.Fetch();
 
-                //de lijsten invullen met de database gegevens
-                albums = AlbumDA.Ophalen();
-                artists = ArtistDA.Ophalen();
-                fileTypes = FileTypeDA.Ophalen();
-                musicLibrary = SongDA.Ophalen();
-                queue = SongDA.Ophalen();
-
-                //de lijsten sorteren op alfabetische volgorde
+                // sort the lists alphabetically
                 musicLibrary.Sort((x, y) => string.Compare(x.Name, y.Name));
                 queue.Sort((x, y) => string.Compare(x.Name, y.Name));
 
-                // de wachtrij shuffelen als shuffle aan staat
-                if (shuffle)
-                {
-                    queue.Shuffle();
-                }
+                // shuffle the queue if shuffle is enabled
+                if (shuffle) queue.Shuffle();
 
-                //selectionChangeActive = true;
-                UpdateGUI();
+                UpdateUI();
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
 
         private void Update(object sender, EventArgs e)
         {
-            try
+            // update the current position of the song
+            if (isPlaying)
             {
-                // de huidige positie van het nummer updaten
-                if (play)
-                {
-                    lblHuidigePositie.Content = $"{player.Position.ToString(@"hh\:mm\:ss")}";
-                }
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
+                lblCurrentPosition.Content = $"{player.Position.ToString(@"hh\:mm\:ss")}";
             }
         }
 
-        private void UpdateGUI()
+        private void UpdateUI()
         {
             try
             {
                 selectionChangeActive = false;
 
-                switch (menu)
+                switch (currentMenu)
                 {
                     case Menu.Start:
-                        //grid zichtbaar maken en de andere niet zichtbaar
-                        grdStart.Visibility = Visibility.Visible;
-                        grdMuziekbibliotheek.Visibility = Visibility.Hidden;
-                        grdWachtrij.Visibility = Visibility.Hidden;
-
-                        //dikte van de rand veranderen
-                        btnStart.BorderThickness = new Thickness(0, 0, 0, 1);
-                        btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                        //listbox leegmaken
-                        lsbStart.Items.Clear();
+                        ShowStartMenu();
                         break;
-                    case Menu.Muziekbibliotheek:
-                        //grid zichtbaar maken en de andere niet zichtbaar
-                        grdStart.Visibility = Visibility.Hidden;
-                        grdMuziekbibliotheek.Visibility = Visibility.Visible;
-                        grdWachtrij.Visibility = Visibility.Hidden;
-
-                        //dikte van de rand veranderen
-                        btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 1);
-                        btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                        //listbox leegmaken
-                        lsbMuziekbibliotheek.Items.Clear();
-
-                        if (tab == Tab.Nummers)
-                        {
-                            //dikte van de rand veranderen
-                            btnNummers.BorderThickness = new Thickness(0, 0, 0, 1);
-                            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
-                            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                            //listbox invullen
-                            foreach (Song song in musicLibrary)
-                            {
-                                lsbMuziekbibliotheek.Items.Add(song.Name);
-                            }
-
-                            if (activePlaylist == Menu.Muziekbibliotheek)
-                            {
-                                lsbMuziekbibliotheek.SelectedItem = currentSong.Name;
-                            }
-                        }
-
-                        if (tab == Tab.Albums)
-                        {
-                            //dikte van de rand veranderen
-                            btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
-                            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 1);
-                            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                            //listbox invullen
-                            foreach (Album album in albums)
-                            {
-                                lsbMuziekbibliotheek.Items.Add(album.album);
-                            }
-                        }
-
-                        if (tab == Tab.Artiesten)
-                        {
-                            //dikte van de rand veranderen
-                            btnNummers.BorderThickness = new Thickness(0, 0, 0, 0);
-                            btnAlbums.BorderThickness = new Thickness(0, 0, 0, 0);
-                            btnArtiesten.BorderThickness = new Thickness(0, 0, 0, 1);
-
-                            //listbox invullen
-                            foreach (Artist artiest in artists)
-                            {
-                                lsbMuziekbibliotheek.Items.Add(artiest.artist);
-                            }
-                        }
+                    case Menu.MusicLibrary:
+                        ShowMusicLibraryMenu();
                         break;
-                    case Menu.Wachtrij:
-                        //grid zichtbaar maken en de andere niet zichtbaar
-                        grdStart.Visibility = Visibility.Hidden;
-                        grdMuziekbibliotheek.Visibility = Visibility.Hidden;
-                        grdWachtrij.Visibility = Visibility.Visible;
-
-                        //dikte van de rand veranderen
-                        btnStart.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnMuziekbibliotheek.BorderThickness = new Thickness(0, 0, 0, 0);
-                        btnWachtrij.BorderThickness = new Thickness(0, 0, 0, 1);
-
-                        //listbox leegmaken
-                        lsbWachtrij.Items.Clear();
-
-                        if (activePlaylist == Menu.Wachtrij)
-                        {
-                            lsbWachtrij.SelectedItem = currentSong.Name;
-                        }
-
-                        //listbox invullen
-                        foreach (Song song in queue)
-                        {
-                            lsbWachtrij.Items.Add(song.Name);
-                        }
+                    case Menu.Queue:
+                        ShowQueueMenu();
+                        break;
+                    default:
                         break;
                 }
-                lsbMuziekbibliotheek.SelectedItem = currentSong.Name;
-                lsbWachtrij.SelectedItem = currentSong.Name;
+
+                lsbMusicLibrary.SelectedItem = currentSong.Name;
+                lsbQueue.SelectedItem = currentSong.Name;
                 lblSongName.Content = currentSong.Name;
-                lblEindePositie.Content = $"{player.NaturalDuration}";
-                
+                lblCurrentPosition.Content = $"{player.Position.ToString(@"hh\:mm\:ss")}";
+                lblEndPosition.Content = player.NaturalDuration.HasTimeSpan ? player.NaturalDuration.TimeSpan.ToString(@"hh\:mm\:ss") : "Unknown";
                 selectionChangeActive = true;
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
+        }
+
+        private void ShowStartMenu()
+        {
+            SetVisibility(grdStart, true);
+            SetVisibility(grdMuziekbibliotheek, false);
+            SetVisibility(grdWachtrij, false);
+
+            SetButtonBorders(btnStart, 1);
+            SetButtonBorders(btnMuziekbibliotheek, 0);
+            SetButtonBorders(btnWachtrij, 0);
+
+            lsbStart.Items.Clear();
+        }
+
+        private void ShowMusicLibraryMenu()
+        {
+            SetVisibility(grdStart, false);
+            SetVisibility(grdMuziekbibliotheek, true);
+            SetVisibility(grdWachtrij, false);
+
+            SetButtonBorders(btnStart, 0);
+            SetButtonBorders(btnMuziekbibliotheek, 1);
+            SetButtonBorders(btnWachtrij, 0);
+
+            PopulateLibraryList();
+        }
+
+        private void ShowQueueMenu()
+        {
+            SetVisibility(grdStart, false);
+            SetVisibility(grdMuziekbibliotheek, false);
+            SetVisibility(grdWachtrij, true);
+
+            SetButtonBorders(btnStart, 0);
+            SetButtonBorders(btnMuziekbibliotheek, 0);
+            SetButtonBorders(btnWachtrij, 1);
+
+            lsbQueue.Items.Clear();
+            foreach (Song song in queue)
+            {
+                lsbQueue.Items.Add(song.Name);
+            }
+        }
+
+        private void SetVisibility(UIElement element, bool isVisible)
+        {
+            element.Visibility = isVisible ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void SetButtonBorders(Button button, int thickness)
+        {
+            button.BorderThickness = new Thickness(0, 0, 0, thickness);
+        }
+
+        private void PopulateLibraryList()
+        {
+            lsbMusicLibrary.Items.Clear();
+
+            switch (currentTab)
+            {
+                case Tab.Songs:
+                    SetTabBorders(btnNummers, 1, btnAlbums, btnArtiesten);
+                    foreach (Song song in musicLibrary) lsbMusicLibrary.Items.Add(song.Name);
+                    break;
+                case Tab.Albums:
+                    SetTabBorders(btnAlbums, 1, btnNummers, btnArtiesten);
+                    foreach (Album album in albums) lsbMusicLibrary.Items.Add(album.album);
+                    break;
+                case Tab.Artists:
+                    SetTabBorders(btnArtiesten, 1, btnNummers, btnAlbums);
+                    foreach (Artist artist in artists) lsbMusicLibrary.Items.Add(artist.artist);
+                    break;
+            }
+
+            if (activePlaylist == Menu.MusicLibrary) lsbMusicLibrary.SelectedItem = currentSong.Name;
+        }
+
+        private void SetTabBorders(Button activeTab, int activeThickness, params Button[] otherTabs)
+        {
+            activeTab.BorderThickness = new Thickness(0, 0, 0, activeThickness);
+            foreach (var tab in otherTabs) tab.BorderThickness = new Thickness(0, 0, 0, 0);
         }
 
         private void AddText(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                txbZoeken.Text = "Zoeken";
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            txbZoeken.Text = "Zoeken";
         }
 
         private void RemoveText(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                txbZoeken.Text = txbZoeken.Text.Replace("Zoeken", "");
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            txbZoeken.Text = txbZoeken.Text.Replace("Zoeken", "");
         }
 
         private void PlaySong()
         {
             try
             {
-                if (activePlaylist == Menu.Muziekbibliotheek)
+                currentSong = activePlaylist switch
                 {
-                    currentSong = musicLibrary[lsbMuziekbibliotheek.SelectedIndex];
-                }
+                    Menu.MusicLibrary => musicLibrary[lsbMusicLibrary.SelectedIndex],
+                    Menu.Queue => queue[lsbQueue.SelectedIndex],
+                    _ => currentSong
+                };
 
-                if (activePlaylist == Menu.Wachtrij)
-                {
-                    currentSong = queue[lsbWachtrij.SelectedIndex];
-                }
+                //selectionChangeActive = false;
 
-                selectionChangeActive = false;
                 player.Stop();
-                for (int index = 0; index < fileTypes.Count; index++)
-                {
-                    if (currentSong.FileType_ID == fileTypes[index].FileType_ID)
-                    {
-                        currentType = index;
-                    }
-                }
+                currentType = fileTypes.FindIndex(f => f.FileType_ID == currentSong.FileType_ID);
 
-                MemoryStream ms = new MemoryStream(currentSong.SongFile);
                 string filepath = $@"C:\Users\{Environment.UserName}\Music\SoundAround\{currentSong.Name} SoundAround{fileTypes[currentType].filetype}";
 
-                if (player.Source != new Uri(filepath))
+                if (player.Source == null || player.Source.AbsolutePath != filepath)
                 {
-                    File.WriteAllBytes(filepath, ms.ToArray());
+                    File.WriteAllBytes(filepath, currentSong.SongFile);
+                    player.Source = new Uri(filepath);
                 }
 
-                player.Source = new Uri(filepath);
                 player.Play();
-                play = true;
-                btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
-                selectionChangeActive = true;
+                isPlaying = true;
+                SetButtonBorders(btnPause, 0);
+
+                //selectionChangeActive = true;
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
 
-        private void SongEnded(object sender, RoutedEventArgs e)
+        private void OnSongEnded(object sender, RoutedEventArgs e)
         {
             try
             {
-                // opnieuw afspelen van het nummer als repeat aan staat
-                if (repeat)
-                {
-                    player.Position = TimeSpan.FromSeconds(0);
-                }
-                // volgend nummer afspelen
-                else
-                {
-                    btnNext_Click(sender, e);
-                }
+                if (repeat) player.Position = TimeSpan.FromSeconds(0);
+                else btnNext_Click(sender, e);
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
 
         private void btnZoeken_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
 
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                //menu gelijk zetten aan start
-                menu = Menu.Start;
-
-                //gui invullen
-                UpdateGUI();
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            // set menu to start
+            currentMenu = Menu.Start;
+            UpdateUI();
         }
 
         private void btnMuziekbibliotheek_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                //menu gelijk zetten aan start
-                menu = Menu.Muziekbibliotheek;
-
-                //gui invullen
-                UpdateGUI();
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            // set menu to music library
+            currentMenu = Menu.MusicLibrary;
+            UpdateUI();
         }
 
         private void btnWachtrij_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                //menu gelijk zetten aan start
-                menu = Menu.Wachtrij;
-
-                //gui invullen
-                UpdateGUI();
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            // set menu to queue
+            currentMenu = Menu.Queue;
+            UpdateUI();
         }
 
         private void btnNummers_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                //tablad gelijk zetten aan start
-                tab = Tab.Nummers;
-
-                //gui invullen
-                UpdateGUI();
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            // set tab to songs
+            currentTab = Tab.Songs;
+            UpdateUI();
         }
 
         private void btnAlbums_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                //tablad gelijk zetten aan start
-                tab = Tab.Albums;
-
-                //gui invullen
-                UpdateGUI();
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            // set tab to albums
+            currentTab = Tab.Albums;
+            UpdateUI();
         }
 
         private void btnArtiesten_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                //tablad gelijk zetten aan start
-                tab = Tab.Artiesten;
-
-                //gui invullen
-                UpdateGUI();
-            }
-            catch (Exception error)
-            {
-                //foutmelding
-                MessageBox.Show(error.Message);
-            }
+            // set tab to artists
+            currentTab = Tab.Artists;
+            UpdateUI();
         }
 
         private void btnNummerToevoegen_Click(object sender, RoutedEventArgs e)
@@ -525,8 +392,8 @@ namespace SoundAround
                             }
                         }
 
-                        FileTypeDA.Toevoegen(fileType);
-                        fileTypes = FileTypeDA.Ophalen();
+                        FileTypeDA.Add(fileType);
+                        fileTypes = FileTypeDA.Fetch();
 
                         foreach (FileType _bestandtype in fileTypes)
                         {
@@ -544,18 +411,18 @@ namespace SoundAround
                         //song.Duration = "23:59:59";
                         song.Duration = $"{player.NaturalDuration}";
 
-                        if (!SongDA.Toevoegen(song))
+                        if (!SongDA.Add(song))
                         {
                             MessageBox.Show("Failed to upload the song");
                         }
 
                     }
                 }
-                DatabaseOphalen();
+                FetchDatabase();
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
@@ -564,28 +431,26 @@ namespace SoundAround
         {
             try
             {
-                //shuffle aan
+                // shuffle the queue
                 if (!shuffle)
                 {
-                    btnShuffle.BorderThickness = new Thickness(0, 0, 0, 1);
+                    SetButtonBorders(btnShuffle, 1);
                     shuffle = true;
-
-                    //de lijst willekeurig maken
                     queue.Shuffle();
-                    UpdateGUI();
                 }
-                //shuffle uit
+                // sort the queue
                 else
                 {
-                    btnShuffle.BorderThickness = new Thickness(0, 0, 0, 0);
+                    SetButtonBorders(btnShuffle, 0);
                     shuffle = false;
                     queue.Sort((x, y) => string.Compare(x.Name, y.Name));
-                    UpdateGUI();
                 }
+
+                UpdateUI();
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
@@ -595,32 +460,32 @@ namespace SoundAround
             try
             {
                 selectionChangeActive = false;
-                if (activePlaylist == Menu.Muziekbibliotheek)
+                if (activePlaylist == Menu.MusicLibrary)
                 {
-                    lsbMuziekbibliotheek.SelectedItem = currentSong.Name;
-                    //ga naar laatste item
-                    if (lsbMuziekbibliotheek.SelectedIndex == -1 || lsbMuziekbibliotheek.SelectedIndex == 0)
+                    lsbMusicLibrary.SelectedItem = currentSong.Name;
+                    // ga naar laatste item
+                    if (lsbMusicLibrary.SelectedIndex == -1 || lsbMusicLibrary.SelectedIndex == 0)
                     {
-                        lsbMuziekbibliotheek.SelectedIndex = musicLibrary.Count - 1;
+                        lsbMusicLibrary.SelectedIndex = musicLibrary.Count - 1;
                     }
-                    //vorig liedje
+                    // vorig liedje
                     else
                     {
-                        lsbMuziekbibliotheek.SelectedIndex--;
+                        lsbMusicLibrary.SelectedIndex--;
                     }
                 }
-                if (activePlaylist == Menu.Wachtrij)
+                if (activePlaylist == Menu.Queue)
                 {
-                    lsbWachtrij.SelectedItem = currentSong.Name;
-                    //ga naar laatste item
-                    if (lsbWachtrij.SelectedIndex == -1 || lsbWachtrij.SelectedIndex == 0)
+                    lsbQueue.SelectedItem = currentSong.Name;
+                    // ga naar laatste item
+                    if (lsbQueue.SelectedIndex == -1 || lsbQueue.SelectedIndex == 0)
                     {
-                        lsbWachtrij.SelectedIndex = queue.Count - 1;
+                        lsbQueue.SelectedIndex = queue.Count - 1;
                     }
-                    //vorig liedje
+                    // vorig liedje
                     else
                     {
-                        lsbWachtrij.SelectedIndex--;
+                        lsbQueue.SelectedIndex--;
                     }
                 }
                 selectionChangeActive = true;
@@ -628,7 +493,7 @@ namespace SoundAround
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
@@ -637,45 +502,45 @@ namespace SoundAround
         {
             try
             {
-                //play
-                if (!play)
+                // play
+                if (!isPlaying)
                 {
                     if (currentSong == null)
                     {
-                        if (menu == Menu.Muziekbibliotheek)
+                        if (currentMenu == Menu.MusicLibrary)
                         {
                             selectionChangeActive = false;
-                            lsbMuziekbibliotheek.SelectedIndex = 0;
+                            lsbMusicLibrary.SelectedIndex = 0;
                             selectionChangeActive = true;
-                            currentSong = musicLibrary[lsbMuziekbibliotheek.SelectedIndex];
+                            currentSong = musicLibrary[lsbMusicLibrary.SelectedIndex];
                         }
 
-                        if (menu == Menu.Wachtrij)
+                        if (currentMenu == Menu.Queue)
                         {
                             selectionChangeActive = false;
-                            lsbWachtrij.SelectedIndex = 0;
+                            lsbQueue.SelectedIndex = 0;
                             selectionChangeActive = true;
-                            currentSong = queue[lsbWachtrij.SelectedIndex];
+                            currentSong = queue[lsbQueue.SelectedIndex];
                         }
                         PlaySong();
-                        btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
+                        SetButtonBorders(btnPause, 0);
                         return;
                     }
                     player.Play();
-                    play = true;
-                    btnPause.BorderThickness = new Thickness(0, 0, 0, 0);
+                    isPlaying = true;
+                    SetButtonBorders(btnPause, 0);
                 }
-                //pauze
+                // pause
                 else
                 {
                     player.Pause();
-                    play = false;
-                    btnPause.BorderThickness = new Thickness(0, 0, 0, 1);
+                    isPlaying = false;
+                    SetButtonBorders(btnPause, 1);
                 }
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
@@ -685,64 +550,39 @@ namespace SoundAround
             try
             {
                 selectionChangeActive = false;
-                if (activePlaylist == Menu.Muziekbibliotheek)
+
+                if (activePlaylist == Menu.MusicLibrary)
                 {
-                    //begin opnieuw
-                    if (lsbMuziekbibliotheek.SelectedIndex == musicLibrary.Count - 1)
-                    {
-                        lsbMuziekbibliotheek.SelectedIndex = 0;
-                    }
-                    //volgend liedje
-                    else
-                    {
-                        lsbMuziekbibliotheek.SelectedIndex++;
-                    }
+                    lsbMusicLibrary.SelectedIndex = (lsbMusicLibrary.SelectedIndex + 1) % musicLibrary.Count;
                 }
-                if (activePlaylist == Menu.Wachtrij)
+                else if (activePlaylist == Menu.Queue)
                 {
-                    //begin opnieuw
-                    if (lsbWachtrij.SelectedIndex == queue.Count - 1)
-                    {
-                        lsbWachtrij.SelectedIndex = 0;
-                    }
-                    //volgend liedje
-                    else
-                    {
-                        lsbWachtrij.SelectedIndex++;
-                    }
+                    lsbQueue.SelectedIndex = (lsbQueue.SelectedIndex + 1) % queue.Count;
                 }
+
                 selectionChangeActive = true;
-                //voer speelliedje uit
                 PlaySong();
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
 
         private void btnRepeat_Click(object sender, RoutedEventArgs e)
         {
-            try
+            // enable repeat
+            if (!repeat)
             {
-                //herhalen
-                if (!repeat)
-                {
-                    repeat = true;
-                    btnRepeat.BorderThickness = new Thickness(0, 0, 0, 1);
-                }
-                //niet herhalen
-                else
-                {
-                    repeat = false;
-                    btnRepeat.BorderThickness = new Thickness(0, 0, 0, 0);
-                }
+                repeat = true;
+                SetButtonBorders(btnRepeat, 1);
             }
-            catch (Exception error)
+            // disable repeat
+            else
             {
-                //foutmelding
-                MessageBox.Show(error.Message);
+                repeat = false;
+                SetButtonBorders(btnRepeat, 0);
             }
         }
 
@@ -750,15 +590,15 @@ namespace SoundAround
         {
             try
             {
-                if (lsbMuziekbibliotheek.SelectedIndex != -1 && tab == Tab.Nummers && selectionChangeActive)
+                if (lsbMusicLibrary.SelectedIndex != -1 && currentTab == Tab.Songs && selectionChangeActive)
                 {
-                    activePlaylist = Menu.Muziekbibliotheek;
+                    activePlaylist = Menu.MusicLibrary;
                     PlaySong();
                 }
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
@@ -770,11 +610,11 @@ namespace SoundAround
                 selectionChangeActive = false;
                 SongDA.Delete(currentSong);
                 selectionChangeActive = true;
-                DatabaseOphalen();
+                FetchDatabase();
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
@@ -790,29 +630,22 @@ namespace SoundAround
         {
             try
             {
-                if (lsbWachtrij.SelectedIndex != -1 && selectionChangeActive)
+                if (lsbQueue.SelectedIndex != -1 && selectionChangeActive)
                 {
-                    activePlaylist = Menu.Wachtrij;
+                    activePlaylist = Menu.Queue;
                     PlaySong();
                 }
             }
             catch (Exception error)
             {
-                //foutmelding
+                // error message
                 MessageBox.Show(error.Message);
             }
         }
 
-        private void DeleteFiles(object sender, EventArgs e)
+        private void DeleteFilesOnClose(object sender, EventArgs e)
         {
-            try
-            {
-                Directory.Delete(folder, true);
-            }
-            catch (Exception error)
-            {
-                MessageBox.Show(error.Message);
-            }
+            Directory.Delete(folder, true);
         }
     }
 }
